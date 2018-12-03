@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/student.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<form class="form-horizontal m-t " novalidate="novalidate">
+			<div class="form-group">
+				<label class="col-sm-3 control-label input_label">考勤组名称：</label>
+				<div class="col-sm-6">
+					<input name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入考勤组名称" id="name">
+				</div>
+			</div>
+			<div class="type_laert">
+				<div data-type="教师" class="type_alert_inner" id="teacherShow">
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">参与考勤人员：</label>
+						<div class="col-sm-6 m-t8 textOver">
+							<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="kqPersonal(this)">请选择</a>
+							<span class="" id="teacherPersonnal"></span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">周考勤规则：</label>
+						<div class="col-sm-6 m-t8 textOver">
+							<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="weekKqRule(this)">请选择周考勤规则</a>
+							<span id="teacherWeelRule"></span>
+						</div>
+					</div>
+
+				</div>
+
+				<div data-type="学生" class="type_alert_inner" id="studentShow">
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">学生类型：</label>
+						<div class="col-sm-6 m-t8">
+							<select class="form-control m-t5" id="studentType">
+								<option value="1">全部</option>
+								<option value="2">走读生</option>
+								<option value="3">住校生</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">考勤学生：</label>
+						<div class="col-sm-6 m-t8">
+							<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="kpStudent(this)">请选择</a>
+							<span id="kqStudent"></span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">周考勤规则：</label>
+						<div class="col-sm-6 m-t8">
+							<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="weekKqRule(this)">请选择</a>
+							<span id="studentWeelRule"></span>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</form>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		var id = parent.editorId;
+		var editorGroupType = parent.editorGroupType;
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		//获取老师详情
+		var managerId = "";
+		var weekAttendanceId = "";
+		var employerListName = "";
+		var employerListId = "";
+		var employerList=[];
+		function techerDetails() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "get",
+				url: http + "attendanceGroup/getEmployeerGroupInfo/" + id,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							console.log(data);
+							layer.close(index);
+							var titleData = data.obj.name;
+							var temList = data.obj.temList;
+							var weekAttendanceNam = data.obj.weekAttendanceName;
+							weekAttendanceId = data.obj.weekAttendanceId;
+							managerId = data.obj.managerId;
+
+							for(var i = 0; i < temList.length; i++) {
+								employerListName += temList[i].name + ',';
+								employerList.push(temList[i].id);
+							}
+							$('#name').val(titleData);
+							$('#teacherPersonnal').text(employerListName);
+							$('#teacherWeelRule').text(weekAttendanceNam);
+							$('#teacherWeelRule').attr("data-id", weekAttendanceId);
+						}
+					}
+
+				},
+				error: function(error) {
+					layer.close(index);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+		//获取学生群组详情
+		var strStudentId = "";
+		var strStudentName = "";
+		var classList=[];
+		function studentDetails() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "get",
+				url: http + "attendanceGroup/getStudentGroupInfo/" + id,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+
+				success: function(data) {
+					if(data.success == false) {
+
+						return false;
+					}
+					if(data.success) {
+						console.log(data);
+
+						var titleData = data.obj.name;
+						var temList = data.obj.temList;
+						var weekAttendanceNam = data.obj.weekAttendanceName;
+						weekAttendanceId = data.obj.weekAttendanceId;
+						managerId = data.obj.managerId;
+						var studentType = data.obj.studentType;
+						$('#studentType option').each(function() {
+							if($(this).val() == studentType) {
+								$(this).attr('selected', true)
+							}
+						})
+						for(var i = 0; i < temList.length; i++) {
+							if(temList[i].name==null){
+								strStudentName="";
+								console.log('111')
+							}else{
+								strStudentName += temList[i].name + '，';
+							}
+							if(temList[i].id==null||temList[i].id==undefined||temList[i].id==""){
+								classList=[];
+							}else{
+								classList.push(temList[i].id);
+							}
+							
+						}
+						$('#name').val(titleData);
+						$('#kqStudent').text(strStudentName);
+						$('#studentWeelRule').text(weekAttendanceNam);
+						$('#studentWeelRule').attr("data-id", weekAttendanceId);
+						layer.close(index);
+					}
+
+				},
+				error: function(error) {
+					layer.close(index);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+		//选择参与考勤类型显示隐藏
+		var type = "";
+		$(document).ready(function() {
+			if(editorGroupType == 1) {
+				$('#teacherShow').show();
+				techerDetails();
+				type = 0;
+
+			} else {
+				type = 1;
+				$('#studentShow').show();
+				studentDetails();
+			}
+		})
+		//选择考勤老师
+		function kqPersonal(elem) {
+			layer.open({
+				title: '选择考勤人员',
+				type: 2,
+				area: ['700px', '450px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'attendanceGroupTeacher.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					var value = iframe.submitPersonnal();
+					console.log(value);
+					if(value) {
+						managerId = value.managerId;
+						employerListName = "";
+						employerList = [];
+						$('#teacherPersonnal').text("");
+						var valueItem = value.items;
+						for(var i = 0; i < valueItem.length; i++) {
+							employerListName += valueItem[i].name + ',';
+							employerList.push(valueItem[i].id);
+						}
+						$('#teacherPersonnal').text(employerListName);
+					}
+
+				}
+			});
+		}
+
+		//选择周考勤规则
+		var studentweekAttendanceId = "";
+
+		function weekKqRule(elem) {
+			layer.open({
+				title: '选择周考勤规则',
+				type: 2,
+				area: ['700px', '400px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'week_rule.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					//判断类型 老师
+					if(type == 0) {
+						var value = iframe.weekRadio();
+
+						weekAttendanceId = value.id;
+
+						$('#teacherWeelRule').text(value.name);
+
+					}
+					//学生
+					if(type == 1) {
+						var value = iframe.weekRadio();
+						console.log(value)
+						studentweekAttendanceId = value.id;
+
+						$('#studentWeelRule').text(value.name);
+						$('#studentWeelRule').attr('data-id', studentweekAttendanceId)
+					}
+
+				}
+			});
+		}
+
+		//编辑教师类型考勤组
+		function editorTeacherGroup() {
+			var addTeacherGroupItem = {};
+			var name = $('#name').val();
+			if(name == "") {
+				layer.msg('请填写考勤组名称');
+				return false;
+			}
+//			if($("#teacherPersonnal").text() == "") {
+//				layer.msg('请选择参与考勤人员');
+//				return false;
+//			}
+			if($("#teacherWeelRule").text() == "") {
+				layer.msg('请选择考勤周规则');
+				return false;
+			}
+			addTeacherGroupItem['name'] = name;
+			addTeacherGroupItem['employerList'] = employerList;
+			addTeacherGroupItem['managerId'] = managerId;
+			addTeacherGroupItem['weekAttendanceId'] = weekAttendanceId;
+			console.log(addTeacherGroupItem)
+			var load = parent.layer.load();
+			$.ajax({
+				type: "PUT",
+				url: http + "attendanceGroup/updateTeacherGroup/" + id,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify(addTeacherGroupItem),
+				success: function(data) {
+					parent.layer.close(load);
+					console.log(data);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.kqList();
+						parent.layer.close(index);
+					}
+
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+		
+		//选择考勤学生
+		var studentType = "";
+		function kpStudent(elem) {
+			studentType = $("#studentType option:selected").val();
+			layer.open({
+				title: '选择考勤学生',
+				type: 2,
+				area: ['700px', '450px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'attendanceGroupStudent.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					var value = iframe.editorClass();
+
+					if(value) {
+						classList = [];
+						strStudentName = "";
+						$('#kqStudent').text("");
+						for(var i = 0; i < value.length; i++) {
+							strStudentName += value[i].name + ',';
+							classList.push(value[i].id);
+						}
+						var reg = /,$/gi;
+						strStudentName = strStudentName.replace(reg, "");
+						strStudentName = strStudentName.split(",")
+
+						$('#kqStudent').text(strStudentName);
+					}
+
+				}
+			});
+		}
+
+		//编辑学生类型考勤组
+		function editorStudentGroup() {
+			console.log(strStudentId);
+			console.log(classList)
+			var addStudentGroupItem = {};
+			var name = $('#name').val();
+			if(name == "") {
+				layer.alert('请填写考勤组名称', {
+					icon: 2
+				});
+				return false;
+			}
+			//			if($("#kqStudent").text() == "") {
+			//				layer.alert('请选择参与考勤学生', {
+			//					icon: 2
+			//				});
+			//				return false;
+			//			}
+			if($("#studentWeelRule").text() == "") {
+				layer.alert('请选择考勤周规则', {
+					icon: 2
+				});
+				return false;
+			}
+			var studentType = $("#studentType  option:selected").val();
+			addStudentGroupItem['name'] = name;
+			addStudentGroupItem['classList'] = classList;
+			addStudentGroupItem['studentType'] = studentType;
+			addStudentGroupItem['weekAttendanceId'] = $('#studentWeelRule').attr('data-id');
+			console.log(addStudentGroupItem);
+			var load = parent.layer.load();
+			$.ajax({
+				type: "PUT",
+				url: http + "attendanceGroup/updateStudentGroup/" + id,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify(addStudentGroupItem),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.kqList();
+						parent.layer.close(index);
+					}
+
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg('程序错误，请重试！');
+				}
+			});
+		}
+		
+	</script>
+
+</html>

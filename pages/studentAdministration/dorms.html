@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<title>智慧校园管理平台</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" type="images/x-icon" href="../../favicon.ico">
+		<link href="../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../css/myPagination.css" rel="stylesheet">
+		<link href="../../css/iconfont.css" rel="stylesheet">
+		<link rel="stylesheet" href="../../css/index_add.css" />
+		<link rel="stylesheet" href="../../css/student.css" />
+		<link href="../../css/iconfont_icon.css" rel="stylesheet">
+		
+	</head>
+
+	<body class="gray-bg top-navigation">
+
+		<div id="wrapper">
+			<div id="page-wrapper" class="gray-bg">
+				<div class="row border-bottom white-bg">
+					<nav class="navbar navbar-static-top" role="navigation">
+						<div class="nav_header">
+							<div class="nav_header_top">
+								<div class="nav_header_top_inner">
+									<p style="float: left;">
+										<img src="../../img/logo_content.png" alt="头像" title="头像" class="nav_header_tou" />
+										<span class="logo_title">智慧校园运营管理系统</span>	
+									</p>
+									<ul class="nav_list">
+										<li>
+											<a href="../../index.html"><i class="icon iconfont icon-yuangongguanli-copy"></i>员工管理</a>
+
+										</li>
+										<li class="nav_listActive">
+											<a href="../studentAdministration/grade.html"><i class="icon iconfont icon-xueshengguanli"></i>学生管理</a>
+											<ul class="nav_list_menu show" style="margin-left:-160px;">
+												<li>
+													<a href="../studentAdministration/grade.html">年级管理</a>
+												</li>
+												<li class="nav_list_menuActive">
+													<a href="../studentAdministration/dorms.html">宿舍管理</a>
+												</li>
+
+											</ul>
+										</li>
+										<li>
+											<a href="../visitorAdministration/stranger.html"><i class="icon iconfont icon-fangkeguanli"></i>来访管理</a>
+											<ul class="nav_list_menu" style="margin-left:-260px;">
+												<li>
+													<a href="../visitorAdministration/stranger.html">陌生人员名单</a>
+												</li>
+
+												<li>
+													<a href="../visitorAdministration/blacklist.html">黑名单</a>
+												</li>
+												<li>
+													<a href="../visitorAdministration/whitelist.html">白名单</a>
+												</li>
+												<li>
+													<a href="../visitorAdministration/exemptionAttendanceList.html">免考勤名单</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="../kqAdministration/dayRule.html"><i class="icon iconfont icon-kaoqinguanli"></i>考勤管理</a>
+											<ul class="nav_list_menu " style="margin-left:-400px;">
+												<li>
+													<a href="../kqAdministration/dayRule.html">日考勤规则</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/weekRule.html">周考勤规则</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/kq_group.html">考勤组管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/holiday.html">假期管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/pushTime.html">推送时间管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/jurisdiction.html">权限管理</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="../kqCount/AttendanceStatistics.html"><i class="icon iconfont icon-tongji"></i>考勤统计</a>
+
+										</li>
+
+										<li>
+											<a href="../systemSetup/account.html"><i class=" icon iconfont icon-xitongguanli-fuben"></i>系统设置</a>
+											<ul class="nav_list_menu" style="margin-left:-640px;">
+
+												<li>
+													<a href="../systemSetup/account.html">账号管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/schoolGate.html">监控门管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/equipment.html">设备管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/screen.html">大屏管理</a>
+												</li>
+
+											</ul>
+										</li>
+									</ul>
+								</div>
+								<p class="user">
+									<span >欢迎您：<span class="userName">lcyz_admin</span></span>
+									<a href="../../login.html" class="color"><i class="icon iconfont icon-tuichu"></i>退出登录</a>
+								</p>
+							</div>
+						</div>
+
+					</nav>
+				</div>
+				<div class="wrapper wrapper-content">
+					<div class="container white-bg">
+						<div class="row">
+							<div class="col-md-12 content_title">宿舍管理</div>
+
+						</div>
+						<div class="row">
+							<div class="col-lg-3">
+								<div class="tree_header_left">
+									<p class="tree_header_left_title">当前宿舍</p>
+
+									<div class="tree_headerBtn">
+										<span class="tree_header_left_label" id="dormsName">宿舍名称</span>
+										<input type="hidden" id="dormsNameValue" value="" />
+										<div class="tree_header_left_btn" onclick="addDorm()">添加</div>
+										<div class="tree_header_left_btn" onclick="editorDorm()">编辑</div>
+										<div class="tree_header_left_btn" onclick="delDorms()">删除</div>
+									</div>
+									<div class="block manageDiv">
+										<p class="tree_header_left_label m-t5">宿舍编号：</p>
+										<p style="float: left;">
+											<span class="manageSpan" id="dormNum">暂无</span>
+										</p>
+									</div>
+									<div class="block manageDiv" >
+										<p class="tree_header_left_label m-t5" style="clear: both;">宿舍管理：</p>
+										<p style="float: left;" id="dormManageName">
+											<span class="manageSpan" style="float: left;">暂无</span>
+											
+										</p>
+									</div>
+									
+								</div>
+
+								<div id="dormsList" class="test treeview" style="clear: both;"></div>
+							</div>
+							<!--右侧-->
+							<div class="col-lg-9">
+								<div class="row m-r5 border-bottom">
+
+									<form class="form-horizontal ">
+										<div class="form-group col-md-4" style="margin-top:5px;">
+											<div class="input-group">
+												<input type="text" class="form-control " name="search" placeholder="请输入宿舍楼名称或姓名" id="dormName">
+												<div class="input-group-btn">
+													<a class="btn  btn-primary" id="searchBtn1" href="#">搜索</a>
+												</div>
+											</div>
+										</div>
+										<div class="form-group col-md-8">
+
+											<label class="col-sm-3 control-label input_label">入校时间:</label>
+											
+											<div class="col-sm-9 ">
+												
+												<input id="start" name="beginTime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth140" placeholder="开始时间" style="margin-top:-10px;">
+												<label class="control-label input_label">至</label>
+												<input id="end" name="endTime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth140" placeholder="结束时间" style="margin-top:-10px;">
+												<a  class="btn btn-sm btn-primary" id="serarchBtn2" style="margin-top:-5px;">查询</a>
+												
+											</div>
+
+										</div>
+										
+									</form>
+								</div>
+								<!--list-->
+								<div class="row">
+									<div class="col-md-12 list-title">
+										<i class="glyphicon glyphicon-stop fontsize"></i> 宿舍人员
+									</div>
+									<div class="col-md-12 m-t10" style="position: relative;">
+
+										<div class="col-sm-12 m-t10">
+											<div class="ibox float-e-margins ">
+
+												<div class="ibox-content pnone">
+
+													<div class="table-responsive relative">
+														<table class="table table-striped" id="tableInfo">
+															<thead>
+																<tr>
+																	<th>宿舍楼</th>
+																	<th>宿舍号</th>
+																	<th>姓名</th>
+																	<th>年级</th>
+																	<th>班级</th>
+																	<th>入校时间</th>
+
+																</tr>
+															</thead>
+															<tbody>
+
+															</tbody>
+														</table>
+
+													</div>
+													<!--分页-->
+													<div id="pagination" class="pagination"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<script src="../../js/jquery.min.js?v=2.1.4"></script>
+			<script src="../../js/bootstrap.min.js?v=3.3.6"></script>
+			<script src="../../js/content.min.js?v=1.0.0"></script>
+			<script src="../../js/plugins/treeview/bootstrap-treeview.js"></script>
+			<script src="../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+			<script src="../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+			<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+			<script src="../../js/plugins/layer/layer.min.js"></script>
+			<script src="../../js/myPagination.js"></script>
+			<script src="../../js/common.js"></script>
+			<script src="../../js/script/config.js"></script>
+
+	</body>
+	<script>
+		//日期插件
+		laydate({
+			elem: "#start",
+			event: "focus",
+			max: laydate.now()
+		});
+		laydate({
+			elem: "#end",
+			event: "focus",
+			max: laydate.now()
+		});
+		$(window).load(function() {
+			
+			getDorms();
+			
+		})
+		var token = sessionStorage.getItem("user_token");
+		var pageNum = 1;
+		var pageSize = 10;
+		var findCondition = $('#dormName').val();
+		var startTime = $('#start').val();
+		var endTime = $('#end').val();
+		//获取宿舍架构
+		var dormsId = "";
+		var managerName=[];
+		function getDorms() {
+			var load=layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "dormitory/findByDelFlag",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+				
+					console.log(data);
+					layer.close(load);
+					userToken(data.restCode, data.msg);
+					if(data.restCode == 200) {
+
+						var treeObj = data.obj;
+						var treeItem = [];
+						if(!jQuery.isEmptyObject(treeObj)) {
+							for(var i = 0; i < treeObj.length; i++) {
+								var treeItems = {};
+								treeItems['sort'] = treeObj[i].sort;
+								treeItems['id'] = treeObj[i].id;
+								treeItems['text'] = treeObj[i].dormName+'('+treeObj[i].studentsCounts+')';
+								treeItems['name'] = treeObj[i].dormName;
+								treeItems['schoolId'] = treeObj[i].schoolId;
+								treeItems['dormNum'] = treeObj[i].dormNum;
+								treeItems['managerLoginName'] = treeObj[i].managerLoginName;
+								treeItems['icon'] = "iconfont icon-fangzi01-copy";
+								treeItem.push(treeItems)
+							}
+						} else {
+							treeItem.push({
+								"text": '暂无宿舍，请添加'
+							})
+						}
+
+						var treeData = [{
+							text: "宿舍架构",
+							backColor: "#47C8AF",
+							color: '#fff',
+							nodes: treeItem,
+							icon: "iconfont icon-fangzi"
+						}];
+						$("#dormsList").treeview({
+							color: "#666",
+							enableLinks: !0,
+							data: treeData,
+							selectedColor: "#fff",
+							selectedBackColor: "#47C8AF",
+							state: [{
+								expanded: true
+							}],
+							onNodeSelected: function(e, treeData) {
+								console.log(treeData)
+								if(treeData.text != "宿舍架构") {
+									sort = treeData.sort;
+									name = treeData.name;
+									dormsId = treeData.id;
+									managerName = treeData.managerLoginName;
+									dormNum = treeData.dormNum;
+									
+									$('#dormsName').text(name);
+									$('#dormNum').text(dormNum);
+									if(managerName== null) {
+										$('#dormManageName span').text("暂无");
+									} else {
+										$('#dormManageName span').text(managerName[0]);
+										if(managerName.length>1){
+											var moreItem='<a href="#" onclick="moreAccount(this)" class="moreManage" >更多账号>>></a>';
+											$('#dormManageName span').append(moreItem);
+										}
+									}
+									findCondition = $('#dormName').val();
+									startTime = $('#start').val();
+									endTime = $('#end').val();
+									getDormsPersonnal();
+								} else {
+									dormsId = "";
+									findCondition = $('#dormName').val();
+									startTime = $('#start').val();
+									endTime = $('#end').val();
+									$('#dormManageName span').text("暂无");
+									$('#dormNum').text("暂无");
+									$('#dormsName').text("宿舍名称");
+									getDormsPersonnal();
+								}
+
+							}
+						})
+					}
+					getDormsPersonnal();
+				},
+				error: function(error) {
+					layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		}
+		
+		//获取宿舍人员
+		function getDormsPersonnal() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "post",
+				url: http + "dormitory/findByCondition",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"pageSize": pageSize,
+					"pageNumber": pageNum,
+					"findCondition": findCondition,
+					"startTime": startTime,
+					"endTime": endTime,
+					"dormId": dormsId
+				}),
+				success: function(data) {
+					layer.close(index);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+
+							var list = data.obj.list;
+							if(!jQuery.isEmptyObject(list)) {
+								$('#tableInfo tbody').html('');
+								$('#pagination').show();
+								for(var i = 0; i < list.length; i++) {
+
+									var tdItems = '';
+									tdItems += '<tr data-id="' + list[i].id + '"  data-name="' + list[i].dormName + '">';
+									tdItems += '<td>' + list[i].dormName + '</td>';
+									tdItems += '<td>' + list[i].roomName + '</td>';
+									tdItems += '<td>' + list[i].name + '</td>';
+									tdItems += '<td>' + list[i].gradeName + '</td>';
+									tdItems += '<td>' + list[i].className + '</td>';
+									tdItems += '<td>' + list[i].admissionTime + '</td>';
+									tdItems += '</td>';
+									tdItems += '</tr>';
+									$('#tableInfo tbody').append(tdItems);
+									new myPagination({
+										id: 'pagination',
+										curPage: data.obj.pageNumber, //初始页码
+										pageTotal: data.obj.totalPages, //总页数
+										pageAmount: data.obj.pageSize, //每页多少条
+										dataTotal: data.obj.totalRows, //总共多少条数据
+										pageSize: 5, //可选,分页个数
+										showPageTotalFlag: true, //是否显示数据统计
+										showSkipInputFlag: false, //是否支持跳转
+										getPage: function(page) {
+											//获取当前页
+											pageNum = page;
+											getDormsPersonnal();
+										}
+									})
+
+								}
+
+							} else {
+								$('#pagination').hide();
+								$('#tableInfo tbody').html('');
+								var tdItems = '<tr><th colspan="8" style="text-align: center;">暂无数据</th></tr>';
+								$('#tableInfo tbody').append(tdItems);
+							}
+						}
+					}
+				},
+				error: function(error) {
+					layer.close(index);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+		
+		//添加宿舍
+		function addDorm() {
+			layer.open({
+				title: '添加宿舍',
+				type: 2,
+				area: ['700px', '450px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: '../../pages/iframe/studentAdmin/addDorm.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					iframe.addDorms();
+
+				}
+			});
+		}
+		//编辑宿舍
+		function editorDorm() {
+			console.log(dormsId);
+			if(dormsId == "") {
+				layer.alert('请选择要编辑的宿舍', {
+					icon: 2
+				});
+				return false;
+			}
+			layer.open({
+				title: '编辑宿舍',
+				type: 2,
+				area: ['700px', '450px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: '../../pages/iframe/studentAdmin/editorDorm.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					iframe.editorDorms();
+					var value = $('#dormsNameValue').val();
+					var flag = $('#dormsNameValue').attr("data-flag");
+					if(flag == 1) {
+						$('#dormsName').text("宿舍名称");
+
+					}
+				}
+			});
+		}
+		//删除宿舍
+		function delDorms() {
+			//进行判断 用户是否选择id
+			if(dormsId == "") {
+				layer.alert('请选择宿舍', {
+					icon: 2
+				});
+				return false;
+			}
+			layer.alert('', {
+				icon: 2,
+				time: 0,
+				content: '您确定要删除这条记录吗？',
+				title: '删除确认',
+				btn: ['确定', '取消'],
+				yes: function(index) {
+					layer.close(index);
+					var load = layer.load();
+					$.ajax({
+						type: "post",
+						url: http + "dormitory/delete?id=" + dormsId,
+						contentType: "application/json;charset=utf-8",
+						dataType: "json",
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("user_token", token);
+						},
+						success: function(data) {
+							layer.close(load);
+							if(data.success == false) {
+								layer.msg(data.msg);
+							}
+							if(data.success) {
+								layer.msg('删除宿舍成功', {
+									time: 1000
+								}, function() {
+									$('#dormsName').text("宿舍名称");
+									$('#managerName').text("暂无");
+									getDorms();
+								});
+							}
+
+						},
+						error: function(error) {
+							layer.close(load);
+							layer.msg("程序错误，请重试！");
+						}
+					});
+				}
+			});
+		}
+		//根据名称查询
+		$("#searchBtn1").click(function() {
+			findCondition = $("#dormName").val();
+			getDormsPersonnal();
+		});
+		//根据时间查询
+		$("#serarchBtn2").click(function() {
+			startTime = $('#start').val();
+			endTime = $('#end').val();
+			getDormsPersonnal();
+		});
+		//查看更多宿舍账号
+		function moreAccount(elem){
+			var msg='';
+			for(var i=0;i<managerName.length;i++){
+				msg+=managerName[i]+'、';
+			}
+			layer.msg( msg.substring(0,msg.length-1));
+		}
+	</script>
+
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/student.css" rel="stylesheet">
+		<link href="../../../css/myPagination.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<form class="form-horizontal m-t " novalidate="novalidate">
+			<div class="form-group">
+				<label class=" col-sm-2 control-label input_label left m-l20">推送时间：</label>
+				<div class="col-sm-6">
+					<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layui-input" id="pushTime" placeholder="HH:mm:ss">
+				</div>
+			</div>
+			<div class="table-responsive relative">
+				<table class="table table-striped table_textCenter" id="addPushTimeTable">
+					<thead>
+						<tr>
+							<th>日考勤规则</th>
+							<th>考勤时间段</th>
+
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+
+			</div>
+			<div id="pagination" class="pagination"></div>
+
+		</form>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/laydate/laydate.js"></script>
+	<script src="../../../js/myPagination.js"></script>
+
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		laydate.render({
+			elem: '#pushTime',
+			type: 'time'
+		});
+
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		var editorId = parent.editorId;
+		var editorName = parent.editorName;
+
+		$('#pushTime').val(editorName);
+
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+		})
+
+		//获取规则详情
+		function getRuleDetails() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "post",
+				url: http + "push/time/getTimeDetail?type=2&timeClassificationId=" + editorId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					layer.close(index);
+					console.log(data);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var list = data.obj;
+
+							$('#addPushTimeTable tbody').html('');
+							for(var i = 0; i < list.length; i++) {
+								var pushTimeDetailDtoList = list[i].pushTimeDetailDtoList;
+								var tdItems = '';
+								tdItems += '<tr data-id="' + list[i].rulesInfoId + '">';
+								tdItems += '<td style="width:30%">' + list[i].rulesName + '</td>';
+								tdItems += '<td style="width:80%">';
+								tdItems += '<ul class="push_list">';
+								for(var j = 0; j < pushTimeDetailDtoList.length; j++) {
+
+									tdItems += '<li>';
+									if(pushTimeDetailDtoList[j].ifChoose == "disable") {
+										tdItems += '<input type="checkbox" class="i-checks" name="type" value="' + pushTimeDetailDtoList[j].id + '" disabled style="background:red;">';
+
+									}
+
+									if(pushTimeDetailDtoList[j].ifChoose == "selected") {
+										tdItems += '<input type="checkbox" class="i-checks" name="type" value="' + pushTimeDetailDtoList[j].id + '" checked >';
+									}
+									if(pushTimeDetailDtoList[j].ifChoose == "selectable") {
+										tdItems += '<input type="checkbox" class="i-checks" name="type" value="' + pushTimeDetailDtoList[j].id + '" >';
+									}
+
+									tdItems += '<label>' + pushTimeDetailDtoList[j].timeSlot + '</label>';
+									tdItems += '</li>';
+								}
+
+								tdItems += '</ul>';
+
+								tdItems += '</td>';
+
+								tdItems += '</tr>';
+								$('#addPushTimeTable tbody').append(tdItems);
+								$(".i-checks").iCheck({
+									checkboxClass: "icheckbox_square-green",
+									radioClass: "iradio_square-green",
+								})
+
+							}
+						}
+					}
+
+				},
+				error: function(error) {
+					layer.close(index);
+					layer.msg("程序错误，请重试！");
+
+				}
+			});
+		}
+		getRuleDetails();
+		//编辑推送时间
+		function editorPushTimeSubmit() {
+			var flag = false;
+			var rulesId = [];
+			var pushTime = $('#pushTime').val();
+			console.log(pushTime);
+			if(pushTime == "") {
+				layer.msg('请选择推送时间');
+				return false;
+			}
+
+			$("#addPushTimeTable tbody tr td input[name='type']:checkbox").each(function() {
+				if($(this).is(':checked')) {
+					if($(this).val() == "") {
+
+					}
+					rulesId.push($(this).val());
+				}
+			})
+			if(rulesId == "") {
+				layer.msg('请至少选择一个推送时间段');
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http+"push/time/updatePushTime",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"timeClassificationId": editorId,
+					"pushTime": pushTime,
+					"rulesId": rulesId
+				}),
+				success: function(data) {
+					parent.layer.close(load);
+					console.log(data);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.pushTimeList();
+						parent.layer.close(index);
+					}
+
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+	</script>
+
+</html>

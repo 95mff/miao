@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<title>智慧校园管理平台</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link rel="stylesheet" href="../../css/index_add.css" />
+		<link rel="stylesheet" href="../../css/student.css" />
+	</head>
+
+	<body class="gray-bg top-navigation">
+
+		<div id="wrapper">
+			<div id="page-wrapper" class="gray-bg">
+				<div class="row border-bottom white-bg">
+					<nav class="navbar navbar-static-top" role="navigation">
+						<div class="nav_header">
+							<div class="nav_header_top">
+								<div class="nav_header_top_inner">
+									<img src="../../img/a1.jpg" alt="头像" title="头像" class="nav_header_tou" />
+									<ul class="nav_list">
+										<li><a href="../../index.html"><i class="icon iconfont icon-yuangongguanli-copy"></i>员工管理</a>
+
+										</li>
+										<li><i class="fa fa-home"></i>学生管理
+											<ul class="nav_list_menu" style="margin-left:-160px;">
+												<li><a href="../studentAdministration/dorms.html">宿舍管理</a></li>
+												<li><a href="../studentAdministration/grade.html">年级管理</a></li>
+											</ul>
+										</li>
+										<li><i class="fa fa-home"></i>来访管理
+											<ul class="nav_list_menu" style="margin-left:-260px;">
+												<li><a href="../visitorAdministration/stranger.html">陌生人员名单</a></li>
+												<li><a href="../visitorAdministration/blacklist.html">黑名单</a></li>
+												<li><a href="../visitorAdministration/whitelist.html">白名单</a></li>
+											</ul>
+										</li>
+										<li><i class="fa fa-home"></i>考勤管理
+											<ul class="nav_list_menu " style="margin-left:-400px;">
+												<li><a href="../kqAdministration/dayRule.html">日考勤规则</a></li>
+												<li ><a href="../kqAdministration/weekRule.html">周考勤规则</a></li>
+												<li><a href="../kqAdministration/kq_group.html">考勤组管理</a></li>
+												<li><a href="../kqAdministration/holiday.html">假期管理</a></li>
+												<li class="nav_list_menuActive"><a href="../kqAdministration/pushTime.html">推送时间管理</a></li>
+												<li><a href="../kqAdministration/jurisdiction.html">权限管理</a></li>
+											</ul>
+										</li>
+										<li><i class="fa fa-home"></i>考勤统计
+											<ul class="nav_list_menu show" style="margin-left:-520px;">
+
+												<li><a href="../kqCount/monthlySummary.html">月度汇总</a></li>
+												<li><a href="../kqCount/dailySummary.html">每日统计</a></li>
+												<li class="nav_list_menuActive"><a href="../kqCount/dkTime.html">打卡时间</a></li>
+
+											</ul>
+										</li>
+										<li><i class="fa fa-home"></i>系统设置
+											<ul class="nav_list_menu" style="margin-left:-640px;">
+
+												<li><a href="../systemSetup/account.html">账号管理</a></li>
+												<li><a href="../systemSetup/schoolGate.html">校门管理</a></li>
+												<li><a href="../systemSetup/equipment.html">设备管理</a></li>
+												<li><a href="../systemSetup/screen.html">大屏管理</a></li>
+											</ul>
+										</li>
+										<li><a href="../../login.html"><i class="icon iconfont icon-tuichu"></i>退出登录</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					</nav>
+				</div>
+				<div class="wrapper wrapper-content">
+					<div class="container white-bg">
+						<div class="row">
+							<ul class="container_header_tab">
+								<li class="active">教职工</li>
+								<li>学生</li>
+							</ul>
+						</div>
+						<div class="row" id="container_header_tabContent">
+							<div class="tab_list show">
+								<div class="col-lg-12 col-md-12 col-sm-12 container_header_title">考勤统计-月度汇总-教职工</div>
+								<form class="form-horizontal m-t " novalidate="novalidate">
+									<div class="form-group">
+										<label class="col-sm-1 control-label input_label" style="margin-top:10px">时间：</label>
+										<div class="col-sm-10 m-t8">
+											<input id="start" name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth180">
+											<span class="control-label input_label">至</span>
+											<input id="end" name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth180">
+											<label class="control-label input_label m-l10">部门</label>
+											<select class="form-control m-t5 selectWidth120">
+												<option>全部</option>
+												<option>高一</option>
+
+											</select>
+											<input type="checkbox" class="i-checks" value="4" checked/><span class=" m-r5">汇总考勤记录</span>
+											<input type="checkbox" class="i-checks" value="5" /><span class=" m-r5">正常考勤记录</span>
+											<input type="checkbox" class="i-checks" value="6" /><span class=" m-r5">异常考勤记录</span>
+											<button type="submit" class="btn btn-sm btn-primary" onclick="tableUpdata()" style="margin-top:-5px;">查询</button>
+											
+										</div>
+									</div>
+									<button class="btn btn-sm btn-primary fontSize15 m-l25 m-b20" onclick="addKqRule(this)" style="margin-top:-5px;"><i class="fa fa-plus"></i>导出报表</button>
+								</form>
+								<div class="ibox-content pnone width95">
+
+									<div class="table-responsive">
+										<table class="table table-striped tableBorder" id="teaherTable">
+											<thead>
+												<tr>
+
+													<th rowspan="2" >姓名</th>
+													<th rowspan="2">年级</th>
+													<th rowspan="2">班级</th>
+													<th rowspan="2">性别</th>
+													<th colspan="2" class="red">六</th>
+													<th class="red" colspan="2">日</th>
+													<th class="red" colspan="2">一</th>
+													<th class="red" colspan="2">二</th>
+													<th class="red" colspan="2">三</th>
+													<th class="red" colspan="2">四</th>
+													<th class="red" colspan="2">五</th>
+													
+													
+												</tr>
+												<tr>
+													<th>进</th>
+													<th>出</th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													
+													
+													
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+
+													<td>苗粉粉</td>
+													<td>高一</td>
+													<td>一班</td>
+													<td>女</td>
+													<td>17：00<br>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+
+												</tr>
+
+											</tbody>
+										</table>
+
+									</div>
+
+								</div>
+							</div>
+							<div class="tab_list">
+								<div class="col-lg-12 col-md-12 col-sm-12 container_header_title">考勤统计-月度汇总-学生</div>
+								<form class="form-horizontal m-t " novalidate="novalidate">
+									<div class="form-group">
+										<label class="col-sm-1 control-label input_label" style="margin-top:10px">时间：</label>
+										<div class="col-sm-10 m-t8">
+											<input id="studentStart" name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth120">
+											<span class="control-label input_label">至</span>
+											<input id="studentEnd" name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth120" >
+											<label class="control-label input_label m-l10">年级</label>
+											<select class="form-control m-t5 selectWidth100">
+												<option>全部</option>
+												<option>高一</option>
+
+											</select>
+											<label class="control-label input_label m-l10">班级</label>
+											<select class="form-control m-t5 selectWidth100">
+												<option>全部</option>
+												<option>一班</option>
+
+											</select>
+											<input type="checkbox" class="i-checks" value="4" checked/><span class=" m-r5">旷课次数</span>
+											<input type="checkbox" class="i-checks" value="5" checked/><span class=" m-r5">早退次数</span>
+											<input type="checkbox" class="i-checks" value="6" checked/><span class=" m-r5">请假次数</span>
+											<input type="checkbox" class="i-checks" value="8" checked/><span class=" m-r5">异常次数</span>
+											<button type="submit" class="btn btn-sm btn-primary" onclick="tableUpdata()" style="margin-top:-5px;">查询</button>
+										</div>
+									</div>
+									<button class="btn btn-sm btn-primary fontSize15  m-l25 m-b20" onclick="addKqRule(this)" style="margin-top:-5px;"><i class="fa fa-plus"></i>导出报表</button>
+
+								</form>
+								<div class="ibox-content pnone width95">
+
+									<div class="table-responsive">
+										<table class="table table-striped tableBorder" id="studentTable">
+											<thead>
+												<tr>
+
+													<th rowspan="2" >姓名</th>
+													<th rowspan="2">年级</th>
+													<th rowspan="2">班级</th>
+													<th rowspan="2">性别</th>
+													<th colspan="2" class="red">六</th>
+													<th class="red" colspan="2">日</th>
+													<th class="red" colspan="2">一</th>
+													<th class="red" colspan="2">二</th>
+													<th class="red" colspan="2">三</th>
+													<th class="red" colspan="2">四</th>
+													<th class="red" colspan="2">五</th>
+													
+													
+												</tr>
+												<tr>
+													<th>进</th>
+													<th>出</th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													
+													
+													
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+
+													<td>苗粉粉</td>
+													<td>高一</td>
+													<td>一班</td>
+													<td>女</td>
+													<td>17：00<br>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+													<td>17：00</td>
+
+												</tr>
+
+											</tbody>
+										</table>
+
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="footer">
+						<div class="pull-right">
+							By：
+							<a href="http://www.zi-han.net/" target="_blank">zihan's blog</a>
+						</div>
+						<div>
+							<strong>Copyright</strong> H+ &copy; 2014
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<script src="../../js/jquery.min.js?v=2.1.4"></script>
+			<script src="../../js/bootstrap.min.js?v=3.3.6"></script>
+			<script src="../../js/content.min.js?v=1.0.0"></script>
+			<script src="../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+			<script src="../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+			<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+
+			<script src="../../js/plugins/layer/layer.min.js"></script>
+			<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+			<script src="../../js/common.js"></script>
+	</body>
+	<script>
+		laydate({
+			elem: "#start",
+			event: "focus"
+		});
+		laydate({
+			elem: "#end",
+			event: "focus"
+		});
+		laydate({
+			elem: "#studentStart",
+			event: "focus"
+		});
+		laydate({
+			elem: "#studentEnd",
+			event: "focus"
+		});
+		$('.container_header_tab li').click(function() {
+			var index = $(this).index();
+			console.log(index);
+			$('.container_header_tab li').eq(index).addClass('active').siblings().removeClass('active');
+			$('#container_header_tabContent .tab_list').eq(index).addClass('show').siblings().removeClass('show');
+		})
+
+		//checkbox全选，反选
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+		
+		
+			//加载框
+			//			layer.msg('加载中', {
+			//				icon: 16,
+			//				shade: 0.01
+			//			});
+			//			$.ajax({
+			//              url:"你的url",  //请求的URL
+			//              timeout:5000, //超时时间设置，单位毫秒
+			//              type :'post',  //请求方式，get或post
+			//              data :{"url":url},  //请求所传参数，json格式
+			//              dataType:'json',//返回的数据格式
+			//              success:function(res){
+			//                  //请求成功的回调函数
+			//                  if(res.info=="ok")
+			//                  {
+			//                      layer.open({
+			//                          content: '成功返回了，我被弹出来',
+			//                          time:3
+			//                      });
+			//                  }else
+			//                  {
+			//                      //稍后尝试
+			//                      layer.open({
+			//                          content: '获取数据失败了，我被弹出来'
+			//                      });
+			//                  }
+			//              },
+			//              complete : function(XMLHttpRequest,status){
+			//                  //请求完成后最终执行参数
+			//                  if(status=='timeout')
+			//                  {
+			//                      //超时,status还有success,error等值的情况
+			//                      layer.open({
+			//                          content: '请求超时,请刷新重试',
+			//                          btn: ['OK']
+			//                      });
+			//                  }
+			//              }
+			//          });
+
+		});
+	
+		function tijiao(elem) {
+			var str = "";
+			$("#tableInfo tbody tr td input[name='input[]']:checkbox").each(function() {
+				if(true == $(this).is(':checked')) {
+					str += $(this).val() + ",";
+				}
+			});
+			if(str.substr(str.length - 1) == ',') {
+				checkboxValue = str.substr(0, str.length - 1);
+			}
+			console.log(checkboxValue);
+		}
+	</script>
+
+	<!-- Mirrored from www.zi-han.net/theme/hplus/index_v5.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:18:52 GMT -->
+
+</html>

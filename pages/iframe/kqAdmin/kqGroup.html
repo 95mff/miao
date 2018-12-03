@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet" />
+		<link href="../../../css/student.css" rel="stylesheet" />
+		<link href="../../../css/myPagination.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+		<div class="table-responsive relative">
+			<table class="table table-striped table_textCenter" id="getkqGroupList">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox" id="allCheck" class="i-checks" />
+						</th>
+						<th>考勤组</th>
+						<th>操作</th>
+						<th>日考勤</th>
+
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../../../js/myPagination.js"></script>
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		//checkbox全选，反选
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		var groupArr = parent.specialAttendanceList;
+		console.log(groupArr)
+		//获取考勤组列表
+		function getkqGroupList() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			});
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "post",
+				url: http + "attendanceGroup/list",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"queryKey": "",
+					"pageNum": 0,
+					"pageSize": 0
+				}),
+				success: function(data) {
+					console.log(data);
+					layer.close(index);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var list = data.obj;
+							if(!jQuery.isEmptyObject(list)) {
+								$('#getkqGroupList tbody').html('');
+								var tdItems = '';
+								for(var i = 0; i < list.length; i++) {
+									tdItems += '<tr data-id="' + list[i].id + '">';
+									tdItems += '<td><input type="checkbox" class="i-checks" name="group[]" value="' + list[i].id + '" data-name="' + list[i].name + '"></td>';
+									tdItems += '<td>' + list[i].name + '</td>';
+									tdItems += '<td>';
+									tdItems += '<button class="btn btn-sm btn-primary" onclick="updataTime(this)" >更改考勤时间</button>';
+									tdItems += '</td>';
+									tdItems += '<td class="dayRule"></td>';
+									tdItems += '</tr>';
+
+								}
+								$('#getkqGroupList tbody').append(tdItems);
+								//绑定值
+								if(groupArr != undefined) {
+									$("#getkqGroupList input[name='group[]']:checkbox").each(function() {
+										var dataId = $(this).val();
+										console.log(dataId)
+										for(var i = 0; i < groupArr.length; i++) {
+											if(dataId == groupArr[i].attendanceGroupId) {
+												console.log(dataId);
+												$(this).iCheck('check');
+												$(this).parent().siblings('.dayRule').text(groupArr[i].dayAttendanceName);
+												$(this).parent().siblings('.dayRule').attr("data-id", groupArr[i].dayAttendanceId);
+												if($(this).parent().siblings('.dayRule').text() != "") {
+													$($(this).parent().siblings().find('button')).css({
+														background: '#D84C29',
+														border: "1px solid #D84C29"
+													})
+												}
+											}
+										}
+									})
+
+								}
+								$(".i-checks").iCheck({
+									checkboxClass: "icheckbox_square-green",
+									radioClass: "iradio_square-green",
+								});
+								//全选
+								$('#allCheck').on('ifChecked', function(event) {
+									$("#getkqGroupList tbody tr td input[name='group[]']:checkbox").iCheck('check');
+
+								});
+								//反选
+								$('#allCheck').on('ifUnchecked', function(event) {
+									$("#getkqGroupList tbody tr td input[name='group[]']:checkbox").iCheck('uncheck');
+
+								});
+
+							} else {
+
+								$('#getkqGroupList tbody').html('');
+								tdItems = '<tr><th colspan="4" style="text-align: center;">暂无数据</th></tr>';
+								$('#getkqGroupList tbody').append(tdItems);
+							}
+						}
+					}
+				},
+				error: function(error) {
+					layer.close(index);
+					layer.msg('程序错误，请重试！');
+				}
+			});
+		}
+		getkqGroupList();
+		//更改考勤时间
+		function updataTime(elem) {
+			var dataId = $(elem).parent().parent().attr('data-id');
+			console.log(dataId);
+			layer.open({
+				title: '选择日考勤规则',
+				type: 2,
+				area: ['600px', '400px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'kq_rule.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					var value = iframe.xuanzeRadio();
+					console.log(value);
+					$(elem).parent().siblings('.dayRule').text(value[0].name);
+					$(elem).parent().siblings('.dayRule').attr("data-id", value[0].id);
+					if($(elem).parent().siblings('.dayRule').text() != "") {
+						$(elem).css({
+							background: '#D84C29',
+							border: "1px solid #D84C29"
+						})
+					}
+
+				}
+			});
+		}
+		//提交考勤组
+
+		function groupCheckbox() {
+			var flag = true;
+			var specialAttendance = [];
+			$("#getkqGroupList input[name='group[]']:checkbox").each(function() {
+				if($(this).is(':checked')) {
+					specialAttendance.push({
+						"attendanceGroupId": $(this).val(),
+						"attendanceGroupName": $(this).attr("data-name"),
+						"dayAttendanceId": $(this).parent().parent().parent().find('.dayRule').attr('data-id'),
+						"dayAttendanceName": $(this).parent().parent().parent().find('.dayRule').text()
+					});
+					var dayRule = $(this).parent().parent().parent().find('.dayRule').text();
+					if(dayRule == "") {
+						flag = false;
+					}
+
+				}
+			});
+
+			if(!jQuery.isEmptyObject(specialAttendance)) {
+				if(flag) {
+					parent.layer.close(index);
+					return specialAttendance;
+				} else {
+					layer.msg("请选择更改考勤时间！");
+				}
+
+			} else {
+				layer.msg("请选择考勤组！");
+				return false;
+			}
+
+		}
+	</script>
+
+</html>

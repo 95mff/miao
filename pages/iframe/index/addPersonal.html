@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<p class="header_title" style="line-height: 40px;">人员信息</p>
+		<div class="ibox-content">
+			<form class="form-horizontal" novalidate="novalidate" id="addPersonalForm">
+				<div class="form-group">
+					<label class="col-sm-2  input_label">姓名：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<input id="name" name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入姓名">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label m-t5">部门：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="department" id="department" required="" aria-required="true">
+
+						</select>
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label m-t5">性别：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2" style="margin-top:8px;" id="sex">
+						<input type="radio" class="i-checks" name="sex" value="0" checked>男&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" class="i-checks" name="sex" value="1">女
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label">职位：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="account" onchange="stationSelect(this)" id="job" required="" aria-required="true">
+
+						</select>
+					</div>
+				</div>
+				<div class="form-group  grade_teacher">
+					<label class="col-sm-2  input_label">年级：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="nianji" id="nianji" onchange="gradeChange(this)" required="" aria-required="true">
+
+						</select>
+					</div>
+				</div>
+				<div class="form-group class">
+					<label class="col-sm-2  input_label">班级：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="banji" id="banji" required="" aria-required="true"  >
+							<option value="">请选择班级...</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label">工号：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<input id="jobNumber" name="jobNumber" minlength="1" type="text" class="form-control" required="" aria-required="true" placeholder="请输入工号">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label">身份证号：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<input id="IDcard" name="IDcard" minlength="2" type="text" class="form-control" placeholder="请输入身份证号">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label">手机号：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<input id="phone" name="phone"  type="text" class="form-control" required="" aria-required="true" placeholder="请输入手机号">
+					</div>
+				</div>
+
+				<div class="form-group ">
+					<label class="col-sm-2  input_label">入职时间：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<input id="ruzhitime" name="ruzhitime"  type="text" class="laydate-icon form-control " required="" aria-required="true" placeholder="请选择入职时间">
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../../../js/isIDCard.js"></script>
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+	<script>
+		var departmentName = parent.name; //获取部门名称
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+			job();
+			laydate({
+				elem: "#ruzhitime",
+				event: "focus",
+				max: laydate.now()
+
+			});
+		})
+		//获取部门
+		function getDepartment() {
+			$.ajax({
+				type: "post",
+				url: http + "department/findAllByPid",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						var list = data.obj;
+						var option = '';
+						var optionNull = '<option value="">请选择部门....</option>';
+						if(!jQuery.isEmptyObject(list)) {
+							for(var i = 0; i < list.length; i++) {
+								option += '<option value="' + list[i].id + '">' + list[i].name + '</option>';
+							}
+							$('#department').append(optionNull);
+							$('#department').append(option);
+						} else {
+							option = '<option value="">暂无部门</option>';
+							$('#department').append(option);
+						}
+					}
+					layer.close(index);
+				},
+				error: function(error) {
+					layer.msg(data.msg);
+				}
+			});
+		}
+		getDepartment();
+
+		//获取职位
+		function job() {
+			$.ajax({
+				type: "get",
+				url: http + "dictionary/dictionaries?type=employee_type",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						var jobList = data.obj;
+						$('#job').html("");
+						var jobOption = '';
+						var optionNull = '<option value="">请选择职位....</option>';
+						if(!jQuery.isEmptyObject(jobList)) {
+							for(var i = 0; i < jobList.length; i++) {
+								jobOption += '<option value="' + jobList[i].id + '">' + jobList[i].value + '</option>';
+							}
+							$('#job').append(optionNull);
+							$('#job').append(jobOption);
+						} else {
+							jobOption += '<option value="' + jobList[i].id + '">暂无职位</option>';
+							$('#job').append(jobOption);
+						}
+
+					}
+				},
+				error: function(error) {
+					layer.msg(data.msg);
+				}
+			});
+		}
+		//获取年级
+		function nianji() {
+			$.ajax({
+				type: "post",
+				url: http + "grade/findAll",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						var nianjiList = data.obj;
+						$('#nianji').html("");
+						var nianjiOption = '';
+						var optionNull = '<option value="">请选择年级....</option>';
+
+						if(!jQuery.isEmptyObject(nianjiList)) {
+							for(var i = 0; i < nianjiList.length; i++) {
+								nianjiOption += '<option value="' + nianjiList[i].id + '">' + nianjiList[i].name + '</option>';
+							}
+							$('#nianji').append(optionNull);
+							$('#nianji').append(nianjiOption);
+						} else {
+							nianjiOption += '<option value="">暂无年级</option>';
+							$('#nianji').append(nianjiOption);
+
+						}
+
+					}
+				},
+				error: function(error) {
+					layer.msg(data.msg);
+				}
+			});
+		}
+		//获取班级
+		var gradeId="";
+		function banji() {
+			 gradeId= $('#nianji option:selected').val();
+			
+			$.ajax({
+				type: "post",
+				url: http + "class/findAllByGradeId?gradeId=" + gradeId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						console.log(data);
+						var banjiList = data.obj;
+						$('#banji').html("");
+						var optionNull = '<option value="">请选择班级....</option>';
+						var banjiOption = '';
+						if(!jQuery.isEmptyObject(banjiList)) {
+							for(var i = 0; i < banjiList.length; i++) {
+								banjiOption += '<option value="' + banjiList[i].id + '">' + banjiList[i].name + '</option>'
+							}
+							$('#banji').append(optionNull);
+							$('#banji').append(banjiOption);
+						} else {
+							banjiOption += '<option value="">暂无班级</option>';
+							$('#banji').append(banjiOption);
+						}
+
+					}
+				},
+				error: function(error) {
+					layer.msg(data.msg);
+				}
+			});
+
+		}
+		//选择职位
+		function stationSelect(elem) {
+			selected = $(elem).find('option:selected').val();
+			//获取年级主任和班主任   都显示年级
+			if(selected == "10011" || selected == "10012") {
+				$(elem).parent().parent().siblings('.grade_teacher').show();
+				nianji();
+			} else {
+				$(elem).parent().parent().siblings('.grade_teacher').hide();
+			}
+			//判断获取班主任 显示班级
+			if(selected == "10012") {
+				$(elem).parent().parent().siblings('.class').show();
+			} else {
+				$(elem).parent().parent().siblings('.class').hide();
+			}
+		}
+		//选择年级
+		function gradeChange() {
+			gradeId = $('#nianji option:selected').val();
+			if(gradeId != "") {
+				banji();
+			} else {
+				$('#banji').html("");
+				var optionNull = '<option value="">请选择班级....</option>';
+				$('#banji').append(optionNull);
+			}
+
+		}
+		//验证教师手机号是否被注册
+		$('#phone').blur(function() {
+			var phone = $(this).val();
+			if(phone == "") {
+				layer.msg('请输入手机号！');
+				return false;
+			}
+			$.ajax({
+				type: "post",
+				url: http + "student/checkRegister?phone=" + phone+'&oldphone=',
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				async: false,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					//0，未被注册过，1 已注册     2 已注册，提示并清空输入框 3提示并清空输入框
+					if(data.value == 1) {
+						$('#phone').val("");
+						layer.msg("此手机号已经被注册,请更换手机号！");
+					} else if(data.value == 2 || data.value == 3) {
+						$('#phone').val("");
+						layer.msg(data.msg);
+					}
+				},
+				error: function(error) {
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		});
+		// 身份证号码验证
+		jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+			return this.optional(element) || idCardNoUtil.checkIdCardNo(value);
+		}, "请正确输入您的身份证号码");
+		// 手机号码验证
+		jQuery.validator.addMethod("isMobile", function(value, element) {
+			var length = value.length;
+			var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+			return this.optional(element) || (length == 11 && mobile.test(value));
+		}, "请正确填写您的手机号码");
+		//新增员工
+		function addEmployee() {
+			$.validator.setDefaults({
+				highlight: function(e) {
+					$(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+				},
+				success: function(e) {
+					e.closest(".form-group").removeClass("has-error").addClass("has-success")
+				},
+				errorElement: "span",
+				errorPlacement: function(e, r) {
+					e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+				},
+				errorClass: "help-block m-b-none",
+				validClass: "help-block m-b-none"
+			}), $().ready(function() {
+				$("#addPersonalForm").validate({
+					rules: {
+						IDcard: {
+							isIdCardNo: true
+
+						},
+						phone: {
+							isMobile: true
+
+						},
+
+					},
+					messages: {
+						IDcard: {
+							isIdCardNo: "请输入正确的身份证号"
+						},
+						phone: {
+							isMobile: "请输入正确的手机号"
+						},
+					}
+				})
+
+			});
+			if(!$("#addPersonalForm").valid()) {
+				return;
+			}
+			var sex = "";
+
+			$("#sex input:radio[name='sex']").each(function() {
+				if($(this).is(':checked')) {
+					sex = $(this).val();
+
+				}
+			})
+			if(sex == undefined || sex == "") {
+				layer.alert('请选择性别', {
+					icon: 2
+				});
+				return false;
+			}
+
+			var name = $('#name').val(); //姓名
+			var sex = ''; //性别
+			$("#sex input[name='sex']:radio").each(function() {
+				if($(this).is(':checked')) {
+					sex = $(this).val();
+				}
+			});
+			var job = $('#job option:selected').val(); //职位
+			var department = $('#department option:selected').val(); //部门
+			var jobNumber = $('#jobNumber').val(); //工号
+			var IDcard = $('#IDcard').val(); //身份证号
+			var phone = $('#phone').val(); //手机号
+			var time = $('#ruzhitime').val(); //入职时间
+			var gradeId = '';
+			var classId = '';
+			if(job == "10011") { //年级主任
+				var gradeId = $('#nianji option:selected').val(); //年级id
+			}
+			if(job == "10012") { //班主主任
+				var classId = $('#banji option:selected').val(); //班级id
+			}
+			if(gradeId == undefined) {
+				gradeId = "";
+			}
+			if(classId == undefined) {
+				classId = "";
+			}
+			var load = parent.layer.load(0);
+			$.ajax({
+				type: "post",
+				url: http + "employee/save",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"departmentId": department,
+					"name": name,
+					"sex": sex,
+					"job": job,
+					"jobNumber": jobNumber,
+					"phone": phone,
+					"idNumber": IDcard,
+					"entryTime": time,
+					"gradeId": gradeId,
+					"classId": classId
+
+				}),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg,{
+							time:5000
+						});
+						var obj = data.obj;
+						if(!jQuery.isEmptyObject(obj)) {
+							layer.msg(obj.message);
+						}
+						return false;
+					}
+					if(data.success) {
+						parent.searchStaff();
+						parent.zuzhi();
+						parent.layer.close(index);
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+	</script>
+
+</html>

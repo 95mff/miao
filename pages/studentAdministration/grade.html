@@ -1,0 +1,1085 @@
+<html>
+
+	<head>
+
+		<title>智慧校园管理平台</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" type="images/x-icon" href="../../favicon.ico">
+		<link href="../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../css/student.css" rel="stylesheet" />
+		<link href="../../css/index_add.css" rel="stylesheet" />
+		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link href="../../css/myPagination.css" rel="stylesheet">
+		<link href="../../css/iconfont_icon.css" rel="stylesheet">
+		
+	</head>
+
+	<body class="gray-bg top-navigation">
+
+		<div id="wrapper">
+			<div id="page-wrapper" class="gray-bg">
+				<div class="row border-bottom white-bg">
+					<nav class="navbar navbar-static-top" role="navigation">
+						<div class="nav_header">
+							<div class="nav_header_top">
+								<div class="nav_header_top_inner">
+									<p style="float: left;">
+										<img src="../../img/logo_content.png" alt="头像" title="头像" class="nav_header_tou" />
+										<span class="logo_title">智慧校园运营管理系统</span>	
+									</p>
+									<ul class="nav_list">
+										<li>
+											<a href="../../index.html"><i class="icon iconfont icon-yuangongguanli-copy"></i>员工管理</a>
+
+										</li>
+										<li class="nav_listActive">
+											<a href="../studentAdministration/grade.html"><i class="icon iconfont icon-xueshengguanli"></i>学生管理</a>
+											<ul class="nav_list_menu show" style="margin-left:-160px;">
+												<li class="nav_list_menuActive">
+													<a href="../studentAdministration/grade.html">年级管理</a>
+												</li>
+												<li>
+													<a href="../studentAdministration/dorms.html">宿舍管理</a>
+												</li>
+
+											</ul>
+										</li>
+										<li>
+											<a href="../visitorAdministration/stranger.html"><i class="icon iconfont icon-fangkeguanli"></i>来访管理</a>
+											<ul class="nav_list_menu" style="margin-left:-260px;">
+												<li>
+													<a href="../visitorAdministration/stranger.html">陌生人员名单</a>
+												</li>
+
+												<li>
+													<a href="../visitorAdministration/blacklist.html">黑名单</a>
+												</li>
+												<li>
+													<a href="../visitorAdministration/whitelist.html">白名单</a>
+												</li>
+												<li>
+													<a href="../visitorAdministration/exemptionAttendanceList.html">免考勤名单</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="../kqAdministration/dayRule.html"><i class="icon iconfont icon-kaoqinguanli"></i>考勤管理</a>
+											<ul class="nav_list_menu " style="margin-left:-400px;">
+												<li>
+													<a href="../kqAdministration/dayRule.html">日考勤规则</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/weekRule.html">周考勤规则</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/kq_group.html">考勤组管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/holiday.html">假期管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/pushTime.html">推送时间管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/jurisdiction.html">权限管理</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="../kqCount/AttendanceStatistics.html"><i class="icon iconfont icon-tongji"></i>考勤统计</a>
+
+										</li>
+
+										<li>
+											<a href="../systemSetup/account.html"><i class=" icon iconfont icon-xitongguanli-fuben"></i>系统设置</a>
+											<ul class="nav_list_menu" style="margin-left:-640px;">
+
+												<li>
+													<a href="../systemSetup/account.html">账号管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/schoolGate.html">监控门管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/equipment.html">设备管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/screen.html">大屏管理</a>
+												</li>
+
+											</ul>
+										</li>
+									</ul>
+								</div>
+								<p class="user">
+									<span >欢迎您：<span class="userName">lcyz_admin</span></span>
+									<a href="../../login.html" class="color"><i class="icon iconfont icon-tuichu"></i>退出登录</a>
+								</p>
+							</div>
+						</div>
+
+					</nav>
+				</div>
+				<div class="wrapper wrapper-content">
+					<div class="container white-bg">
+						<div class="row">
+							<div class="col-md-12 content_title">年级管理</div>
+
+						</div>
+						<div class="row">
+							<div class="col-lg-3">
+								<div class="tree_header_left">
+									<p class="tree_header_left_title">当前年级（班级）</p>
+									<div class="relative block">
+										<p class="center">
+
+											<span class="tree_header_left_label">当前年级：<span id="gradeName">暂无</span></span>
+										</p>
+										<p class="center">
+
+											<span class="tree_header_left_label">当前班级：<span id="className">暂无</span></span>
+										</p>
+									</div>
+
+									<div class=" divCenter">
+										<div class="tree_header_left_btn" onclick="addClass()">添加</div>
+										<div class="tree_header_left_btn" onclick="editorClass()">编辑</div>
+										<div class="tree_header_left_btn" onclick="del()">删除</div>
+									</div>
+
+								</div>
+								<div id="gradeList" class="test treeview"></div>
+							</div>
+							<!--右侧-->
+							<div class="col-lg-9">
+								<div class="row">
+									<div class="col-md-12 height35">
+										<span class="tree_header_left_label">年级主任：<span class="tree_header_left_text" id="gradeManageName">暂无</span></span>
+										<span class="tree_header_left_label m-r20">班主任：<span class="tree_header_left_text" id="classManageName">暂无</span></span>
+									</div>
+								</div>
+								<div class="row b-t1 m-t15">
+
+									<div class="form-group col-md-4 p-lNone">
+										<div class="input-group">
+											<input type="text" class="form-control input-sm" name="search" placeholder="请输入姓名搜索..." id="findCondition">
+											<div class="input-group-btn">
+												<a href="#" class="btn btn-sm btn-primary" id="nameSearchBtn">搜索</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row m-r5 border-bottom">
+									<form class="form-horizontal m-t">
+										<div class="form-group">
+											<label class="col-sm-1 control-label " style="font-size:14px;margin-top:10px;">时间：</label>
+											<div class="col-sm-10 m-t8">
+
+												<input id="start" name="beginTime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth180" placeholder="请选择开始时间" style="margin-top:-10px;">
+												<label class="control-label input_label">至</label>
+												<input id="end" name="endTime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth180" placeholder="请选择结束时间" style="margin-top:-10px;">
+
+												<label class="control-label input_label m-l10">是否建模</label>
+												<select class="form-control m-t5 selectWidth120" id="modelFlag">
+													<option value="">全部</option>
+													<option value="1">已建模</option>
+													<option value="0">未建模</option>
+												</select>
+												<a class="btn btn-sm btn-primary" id="conditionSerachBtn" style="margin-top:-5px;">查询</a>
+
+											</div>
+										</div>
+									</form>
+								</div>
+
+								<!--list-->
+								<div class="row">
+									<div class="col-md-12 list-title">
+										<i class="glyphicon glyphicon-stop fontsize"></i> 班级人员
+									</div>
+									<div class="col-md-12 m-t10" style="position: relative;">
+										<div class="right_btn left">
+											<div class="tree_header_left_btn" onclick="exportClass()">批量导入/导出/修改</div>
+											<div class="tree_header_left_btn" onclick="addClassPersonal()">添加成员</div>
+											<div class="tree_header_left_btn" onclick="modelData()">同步建模数据</div>
+											<div class="tree_header_left_btn" onclick="delPersonnal()">删除</div>
+
+										</div>
+
+										<div class="col-sm-12 m-t10">
+											<div class="ibox float-e-margins ">
+
+												<div class="ibox-content pnone">
+
+													<div class="table-responsive relative">
+														<table class="table table-striped" id="tableInfo" style="font-size: 14px;">
+															<thead>
+																<tr>
+
+																	<th><input type="checkbox" class="i-checks" id="allOptionId"></th>
+																	<th>姓名</th>
+																	<th>年级</th>
+																	<th>班级</th>
+																	<th>宿舍楼</th>
+																	<th>宿舍号</th>
+																	<th>建模信息</th>
+																	<th>入校时间</th>
+																	<th style="text-align: center;">操作</th>
+																</tr>
+															</thead>
+															<tbody>
+
+															</tbody>
+														</table>
+													</div>
+													<!--分页-->
+													<div id="pagination" class="pagination"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<script src="../../js/jquery.min.js?v=2.1.4"></script>
+			<script src="../../js/bootstrap.min.js?v=3.3.6"></script>
+			<script src="../../js/content.min.js?v=1.0.0"></script>
+			<script src="../../js/plugins/treeview/bootstrap-treeview.js"></script>
+			<script src="../../js/demo/treeview-demo.min.js"></script>
+			<script src="../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8" type="text/javascript"></script>
+			<script src="../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+			<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+			<script src="../../js/plugins/layer/layer.min.js"></script>
+			<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+
+			<script src="../../js/myPagination.js"></script>
+
+			<script src="../../js/common.js"></script>
+			<script src="../../js/script/config.js"></script>
+
+	</body>
+	<script>
+		$(window).load(function() {
+			getGrade();
+		})
+		var token = sessionStorage.getItem("user_token");
+		var gradeId = ""; //年级Id
+		var classId = ""; //班级Id
+		var startTime = $('#start').val(); //开始时间
+		var endTime = $('#end').val(); //结束时间
+		var findCondition = $('#findCondition').val(); //输入查询名字手机号
+		var modelFlag = $("#modelFlag  option:selected").val(); //是否建模
+		var pageSize = 10; //每一页展示多少条
+		var pageNumber = 1; //当前页数
+		var treeData1 = [];
+
+		//获取年级组织架构
+		function getGrade() {
+			var load = layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "grade/getCompeletGradeStructure",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				//async: false,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					layer.close(load);
+					userToken(data.restCode, data.msg);
+					if(data.restCode == 200) {
+
+						var treeTitle = data.attributes.schoolName;
+						var treeObj = data.obj;
+						var treeItem = [];
+						for(var i = 0; i < treeObj.length; i++) {
+							var treeItems = {};
+							treeItems['id'] = treeObj[i].id;
+							treeItems['text'] = treeObj[i].name + '(' + treeObj[i].classNum + ')';
+							treeItems['name'] = treeObj[i].name;
+							treeItems['gradeName'] = treeObj[i].name;
+							treeItems['className'] = "暂无";
+							treeItems['gradeManagerName'] = treeObj[i].managerName;
+							treeItems['classManagerName'] = "";
+							treeItems['icon'] = "iconfont icon-nianji";
+							var classInfo = treeObj[i].classDtoList;
+							var nodes = [];
+							for(var j = 0; j < classInfo.length; j++) {
+								nodes.push({
+									"id": classInfo[j].id,
+									"text": classInfo[j].className + '(' + classInfo[j].studentNum + ')',
+									"name": classInfo[j].className,
+									"gradeName": treeObj[i].name,
+									"className": classInfo[j].className,
+									"classManagerName": classInfo[j].managerName,
+									"gradeManagerName": treeObj[i].managerName,
+									"icon": "iconfont icon-banjichengyuan"
+								})
+							}
+							treeItems['nodes'] = nodes;
+							treeItem.push(treeItems);
+
+						}
+
+						var treeData = [{
+							text: treeTitle,
+							backColor: "#47C8AF",
+							color: '#fff',
+							nodes: treeItem,
+							icon: "iconfont icon-renshixuexiao"
+						}];
+						$("#gradeList").treeview({
+							color: "#666",
+							enableLinks: !0,
+							data: treeData,
+							selectedColor: "#fff",
+							selectedBackColor: "#47C8AF",
+							state: [{
+								expanded: true
+							}],
+							onNodeSelected: function(e, treeData) {
+								console.log(treeData);
+								if(treeData.text != "历城一中") {
+									console.log('111')
+									treeData1 = [];
+									treeData1.push(treeData);
+									sort = treeData.sort;
+									name = treeData.name;
+
+									dormsId = treeData.id;
+									var gradeName = treeData.gradeName;
+									var gradeManagerName = treeData.gradeManagerName; //年级主任
+									var className = treeData.className;
+									var classManagerName = treeData.classManagerName; //班主任
+									if(gradeManagerName == null || gradeManagerName == undefined || gradeManagerName == "") {
+										$('#gradeManageName').text("暂无");
+
+									} else {
+										$('#gradeManageName').text(gradeManagerName);
+
+									}
+									$('#classManageName').text(classManagerName);
+									$('#gradeName').text(gradeName);
+									$('#className').text(className);
+
+									if(treeData.hasOwnProperty("_nodes")) {
+										console.log('333')
+										$('#gradeName').text(gradeName);
+										$('#className').text(className);
+										if(gradeManagerName == null || gradeManagerName == undefined || gradeManagerName == "") {
+											$('#gradeManageName').text("暂无");
+											$('#classManageName').text("暂无");
+										} else {
+											$('#gradeManageName').text(gradeManagerName);
+											$('#classManageName').text("暂无");
+
+										}
+
+										gradeId = treeData.id;
+										classId = "";
+										findCondition = $('#findCondition').val();
+										startTime = $('#start').val(); //开始时间
+										endTime = $('#end').val(); //结束时间
+										modelFlag = $("#modelFlag  option:selected").val(); //是否建模
+										studentInfo();
+										return false;
+
+									} else {
+										console.log('444')
+
+										if((treeData.hasOwnProperty("nodes"))) {
+											console.log('555')
+											if(gradeManagerName == null || gradeManagerName == undefined || gradeManagerName == "") {
+												$('#gradeManageName').text("暂无");
+												$('#classManageName').text("暂无");
+											} else {
+												$('#gradeManageName').text(gradeManagerName);
+												$('#classManageName').text("暂无");
+
+											}
+											$('#gradeName').text(gradeName);
+											$('#className').text(className);
+											gradeId = treeData.id;
+											classId = "";
+											findCondition = $('#findCondition').val();
+											startTime = $('#start').val(); //开始时间
+											endTime = $('#end').val(); //结束时间
+											modelFlag = $("#modelFlag  option:selected").val(); //是否建模
+											studentInfo();
+											return false;
+										} else {
+											console.log('666')
+
+											if(classManagerName == null || classManagerName == undefined || classManagerName == "") {
+												$('#classManageName').text("暂无");
+											} else {
+												if(gradeManagerName == null || gradeManagerName == undefined || gradeManagerName == "") {
+													$('#gradeManageName').text("暂无");
+
+												} else {
+													$('#gradeManageName').text(gradeManagerName);
+												}
+
+												$('#classManageName').text(classManagerName);
+											}
+											$('#gradeName').text(gradeName);
+											$('#className').text(className);
+											gradeId = "";
+											classId = treeData.id;
+											findCondition = $('#findCondition').val();
+											startTime = $('#start').val(); //开始时间
+											endTime = $('#end').val(); //结束时间
+											modelFlag = $("#modelFlag  option:selected").val(); //是否建模
+											studentInfo();
+											return false;
+										}
+
+										if(gradeManageName == null || gradeManageName == undefined || gradeManageName == "") {
+											$('#gradeManageName').text("暂无");
+											$('#classManageName').text("暂无");
+										} else {
+											$('#gradeManageName').text(gradeManageName);
+											$('#classManageName').text("暂无");
+
+										}
+										console.log('777')
+										$('#gradeName').text(name);
+										$('#gradeManageName').text(gradeManagerName);
+										$('#classManageName').text(classManagerName);
+										gradeId = treeData.id;
+										classId = "";
+										findCondition = $('#findCondition').val();
+										startTime = $('#start').val(); //开始时间
+										endTime = $('#end').val(); //结束时间
+										modelFlag = $("#modelFlag  option:selected").val(); //是否建模
+										studentInfo();
+										return false;
+									}
+								} else {
+									console.log('222')
+									gradeId = "";
+									classId = "";
+									$('#gradeName').text("暂无");
+									$('#className').text("暂无");
+									$('#gradeManageName').text("暂无");
+									$('#classManageName').text("暂无");
+									findCondition = $('#findCondition').val();
+									startTime = $('#start').val(); //开始时间
+									endTime = $('#end').val(); //结束时间
+									modelFlag = $("#modelFlag  option:selected").val(); //是否建模
+									studentInfo();
+									treeData1 = [];
+								}
+
+							}
+						})
+					}
+					studentInfo();
+				},
+				error: function(error) {
+
+					layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		}
+
+		//获取班级人员学生信息
+		function studentInfo() {
+			var load = layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "student/findAllByCondition",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"gradeId": gradeId,
+					"classId": classId,
+					"startTime": startTime,
+					"endTime": endTime,
+					"findCondition": findCondition,
+					"modelFlag": modelFlag,
+					"pageSize": pageSize,
+					"pageNumber": pageNumber
+				}),
+				success: function(data) {
+					layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+
+							var list = data.obj.list;
+							if(!jQuery.isEmptyObject(list)) {
+								$('#pagination').show();
+								$('#tableInfo tbody').html('');
+								for(var i = 0; i < list.length; i++) {
+
+									var tdItems = '';
+									tdItems += '<tr data-id="' + list[i].id + '"  data-name="' + list[i].name + '">';
+									tdItems += '<td><input type="checkbox" class="i-checks" name="student[]" value="' + list[i].id + '"></td>';
+									tdItems += '<td>' + list[i].name + '</td>';
+									tdItems += '<td>' + list[i].gradeName + '</td>';
+									tdItems += '<td>' + list[i].className + '</td>';
+
+									if(list[i].dormName == null || list[i].dormName == "") {
+										tdItems += '<td>暂无</td>';
+
+									} else {
+										tdItems += '<td>' + list[i].dormName + '</td>';
+									}
+									if(list[i].roomName == null || list[i].roomName == "") {
+										tdItems += '<td>暂无</td>';
+
+									} else {
+										tdItems += '<td>' + list[i].roomName + '</td>';
+									}
+									if(list[i].modelFlag == 0) {
+										tdItems += '<td>未建模</td>';
+									}
+									if(list[i].modelFlag == 1) {
+										tdItems += '<td>已建模</td>';
+									}
+									if(list[i].modelFlag == null) {
+										tdItems += '<td>暂无</td>';
+									}
+									tdItems += '<td>' + list[i].admissionTime + '</td>';
+									tdItems += '<td style="text-align: center;">';
+									tdItems += '<button class="btn btn-sm btn-primary" onclick="updataPersonnal(this)" style="margin-right:10px;">建模</button>';
+									tdItems += '<button class="btn btn-sm btn-primary" onclick="editorClassPersonal(this)">编辑</button>';
+
+									tdItems += '</td>';
+
+									tdItems += '</tr>';
+									$('#tableInfo tbody').append(tdItems);
+									$(".i-checks").iCheck({
+										checkboxClass: "icheckbox_square-green",
+										radioClass: "iradio_square-green",
+									})
+									//全选
+									$('#allOptionId').on('ifChecked', function(event) {
+										$("#tableInfo tbody tr td input[name='student[]']:checkbox").iCheck('check');
+
+									});
+									//反选
+									$('#allOptionId').on('ifUnchecked', function(event) {
+										$("#tableInfo tbody tr td input[name='student[]']:checkbox").iCheck('uncheck');
+
+									});
+									new myPagination({
+										id: 'pagination',
+										curPage: data.obj.pageNum, //初始页码
+										pageTotal: data.obj.pages, //总页数
+										pageAmount: data.obj.pageSize, //每页多少条
+										dataTotal: data.obj.total, //总共多少条数据
+										pageSize: 5, //可选,分页个数
+										showPageTotalFlag: true, //是否显示数据统计
+										showSkipInputFlag: false, //是否支持跳转
+										getPage: function(page) {
+											//获取当前页
+											pageNumber = page;
+
+											studentInfo();
+										}
+									})
+								}
+							} else {
+								$('#pagination').hide();
+								$('#tableInfo tbody').html('');
+								var tdItems = '<tr><th colspan="8" style="text-align: center;">暂无数据</th></tr>';
+								$('#tableInfo tbody').append(tdItems);
+							}
+						}
+					}
+				},
+				error: function(error) {
+					layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+
+		//按名字和宿舍楼搜索
+		$('#nameSearchBtn').click(function() {
+			findCondition = $('#findCondition').val();
+			startTime = $('#start').val(); //开始时间
+			endTime = $('#end').val();
+			studentInfo();
+		});
+		//全部搜索
+		$('#conditionSerachBtn').click(function() {
+			startTime = $('#start').val(); //开始时间
+			endTime = $('#end').val(); //结束时间
+			findCondition = $('#findCondition').val(); //输入查询名字手机号
+			modelFlag = $("#modelFlag  option:selected").val(); //是否建模
+			studentInfo();
+		});
+
+		//添加年级或班级
+		var addClassId = "";
+
+		function addClass() {
+			if(jQuery.isEmptyObject(treeData1)) { //没点击年级组织架构前添加班级
+				layer.open({
+					title: '添加年级',
+					type: 2,
+					area: ['700px', '450px'],
+					fixed: false, //不固定
+					maxmin: true,
+					btn: ['确定', '取消'],
+					content: '../../pages/iframe/studentAdmin/addGrade.html',
+					yes: function(guanbi, index) {
+						var iframe = window[index.find('iframe')[0]['name']];
+						//获取子界面传过来的参数
+						iframe.addGrade();
+
+					}
+				});
+				return false;
+			} else {
+				addClassId = treeData1[0].id;
+				if(treeData1[0].hasOwnProperty("_nodes") || (treeData1[0].hasOwnProperty("nodes"))) { //添加班级
+					layer.open({
+						title: '添加班级',
+						type: 2,
+						area: ['700px', '450px'],
+						fixed: false, //不固定
+						maxmin: true,
+						btn: ['确定', '取消'],
+						content: '../../pages/iframe/studentAdmin/addClass.html',
+						yes: function(guanbi, index) {
+							var iframe = window[index.find('iframe')[0]['name']];
+							//获取子界面传过来的参数
+							iframe.addClass();
+
+						}
+					});
+					return false;
+				} else {
+					layer.msg('请在年级架构下添加班级！')
+				}
+
+			}
+		}
+		//编辑年级或班级
+		var ediotrId = "";
+
+		function editorClass() {
+			if(jQuery.isEmptyObject(treeData1)) { //编辑班级
+				layer.alert('请选择要编辑的年级或班级', {
+					icon: 2
+				});
+				return false;
+			} else {
+				if(treeData1[0].hasOwnProperty("_nodes") || (treeData1[0].hasOwnProperty("nodes"))) { //编辑年级
+					ediotrId = treeData1[0].id;
+					layer.open({
+						title: '编辑年级',
+						type: 2,
+						area: ['700px', '450px'],
+						fixed: false, //不固定
+						maxmin: true,
+						btn: ['确定', '取消'],
+						content: '../../pages/iframe/studentAdmin/editorGrade.html',
+						yes: function(guanbi, index) {
+							var iframe = window[index.find('iframe')[0]['name']];
+							//获取子界面传过来的参数
+							iframe.editorGrade();
+
+						}
+					});
+					return false;
+				} else { //编辑班级
+					ediotrId = treeData1[0].id;
+					layer.open({
+						title: '编辑班级',
+						type: 2,
+						area: ['700px', '450px'],
+						fixed: false, //不固定
+						maxmin: true,
+						btn: ['确定', '取消'],
+						content: '../../pages/iframe/studentAdmin/editorClass.html',
+						yes: function(guanbi, index) {
+							var iframe = window[index.find('iframe')[0]['name']];
+							//获取子界面传过来的参数
+							iframe.editorClass();
+
+						}
+					});
+					return false;
+				}
+
+			}
+		}
+		//删除年级或班级
+		function del() {
+			if(jQuery.isEmptyObject(treeData1)) { //编辑班级
+				layer.alert('请选择要删除的年级或班级', {
+					icon: 2
+				});
+				return false;
+			} else {
+				if(treeData1[0].hasOwnProperty("_nodes") || (treeData1[0].hasOwnProperty("nodes"))) { //编辑年级
+					delId = treeData1[0].id;
+					layer.alert('删除提示', {
+						icon: 2,
+						time: 0,
+						content: '您确定要删除此年级吗？',
+						title: '删除确认',
+						btn: ['确定', '取消'],
+						yes: function(index) {
+							layer.close(index);
+							var load = layer.load();
+							$.ajax({
+								type: "post",
+								url: http + "grade/delete?id=" + delId,
+								contentType: "application/json;charset=utf-8",
+								dataType: "json",
+								beforeSend: function(XMLHttpRequest) {
+									XMLHttpRequest.setRequestHeader("user_token", token);
+								},
+
+								success: function(data) {
+									layer.close(load);
+									if(data.success == false) {
+										layer.msg(data.msg);
+									}
+									if(data.success) {
+										layer.msg('删除年级成功', {
+											time: 1000
+										}, function() {
+											$('#className').text("暂无");
+											$('#gradeName').text("暂无");
+											$('#gradeManageName').text("暂无");
+											$('#classManageName').text('暂无');
+											getGrade();
+											gradeId = "";
+											studentInfo();
+										});
+									}
+								},
+								error: function(error) {
+									layer.close(load);
+									layer.msg("程序错误，请重试！");
+								}
+							});
+						}
+					});
+					return false;
+				} else { //删除班级
+					delId = treeData1[0].id;
+					layer.alert('删除提示', {
+						icon: 2,
+						time: 0,
+						content: '您确定要删除此班级吗？',
+						title: '删除确认',
+						btn: ['确定', '取消'],
+						yes: function(index) {
+							layer.close(index);
+							var load = layer.load();
+							$.ajax({
+								type: "post",
+								url: http + "class/delete?id=" + delId,
+								contentType: "application/json;charset=utf-8",
+								dataType: "json",
+								beforeSend: function(XMLHttpRequest) {
+									XMLHttpRequest.setRequestHeader("user_token", token);
+								},
+
+								success: function(data) {
+									layer.close(load);
+									console.log(data);
+									if(data.success == false) {
+										layer.msg(data.msg);
+									}
+									if(data.success) {
+										layer.msg('删除班级成功', {
+											time: 1000
+										}, function() {
+
+											$('#className').text("暂无");
+											$('#gradeName').text("暂无");
+											$('#gradeManageName').text("暂无");
+											$('#classManageName').text('暂无');
+											getGrade();
+											classId = "";
+											studentInfo();
+										});
+									}
+
+								},
+								error: function(error) {
+									layer.close(load);
+									layer.msg("程序错误，请重试！");
+								}
+							});
+						}
+					});
+				}
+
+			}
+		}
+		//添加成员
+		function addClassPersonal() {
+			layer.open({
+				title: '添加学生',
+				type: 2,
+				area: ['800px', '650px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: '../../pages/iframe/studentAdmin/addClassPersonal.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					iframe.addClassPersonnal();
+
+				}
+			});
+		}
+		//编辑成员
+		var editorId = "";
+
+		function editorClassPersonal(elem) {
+			editorId = $(elem).parent().parent().attr("data-id");
+
+			layer.open({
+				title: '编辑学生',
+				type: 2,
+				area: ['800px', '650px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: '../../pages/iframe/studentAdmin/editorClassPersonal.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+
+					iframe.editorClassPersonnal();
+
+				}
+			});
+		}
+		//批量删除学生
+		function delPersonnal() {
+			var delIds = [];
+			$("#tableInfo tbody tr td input[name='student[]']:checkbox").each(function() {
+				if($(this).is(':checked')) {
+					delIds.push($(this).val());
+				}
+			});
+			if(jQuery.isEmptyObject(delIds)) {
+				layer.alert('请选择要删除的学生', {
+					icon: 2
+				});
+				return false;
+			}
+
+			layer.alert('删除提示', {
+				icon: 2,
+				time: 0,
+				content: '您确定要删除这条记录吗？',
+				title: '删除确认',
+				btn: ['确定', '取消'],
+				yes: function(index) {
+					layer.close(index);
+					var load = layer.load();
+					$.ajax({
+						type: "post",
+						url: http + "student/delete",
+						contentType: "application/json;charset=utf-8",
+						dataType: "json",
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("user_token", token);
+						},
+						data: JSON.stringify({
+							"ids": delIds
+						}),
+						success: function(data) {
+							console.log(data);
+							layer.close(load);
+							if(data.success == false) {
+								layer.msg(data.msg);
+								return false;
+							}
+							if(data.success) {
+								if($('#allOptionId').is(':checked')) {
+									$('#allOptionId').iCheck('toggle');
+								}
+								layer.msg('删除学生成功', {
+									time: 2000
+								}, function() {
+									getGrade();
+									studentInfo();
+								});
+
+							}
+						},
+						error: function(error) {
+							layer.close(load);
+							layer.msg("程序错误，请重试！");
+						}
+					});
+				}
+			});
+		}
+		//导出导入
+		var exportClassId = "";
+
+		function exportClass() {
+			if(jQuery.isEmptyObject(treeData1)) { //编辑班级
+				layer.alert('请选择要导入的班级', {
+					icon: 2
+				});
+				return false;
+			}
+			if(treeData1[0].hasOwnProperty("_nodes") || treeData1[0].hasOwnProperty("nodes")) {
+				layer.alert('不能以年级为单位导入，请选择年级', {
+					icon: 2
+				});
+				return false;
+
+			} else { //为班级添加人员
+
+				exportClassId = treeData1[0].id;
+
+				layer.open({
+					title: '批量导入/导出',
+					type: 2,
+					area: ['700px', '600px'],
+					fixed: false, //不固定
+					maxmin: true,
+					btn: ['确定', '取消'],
+					content: '../../pages/iframe/studentAdmin/exportClass.html',
+					yes: function(guanbi, index) {
+						var iframe = window[index.find('iframe')[0]['name']];
+						//获取子界面传过来的参数
+
+						var tabIndex = iframe.tabIndex;
+						console.log(tabIndex)
+						if(tabIndex == 0) {
+							iframe.addClassImport()
+						}
+						if(tabIndex == 1) {
+							iframe.editorClassImport()
+						}
+
+					}
+				});
+
+			}
+
+		}
+
+		//更新
+		function updateClass() {
+			var id = 1;
+			//进行判断 用户是否选择id
+			if(id == 2) {
+				layer.alert('请选择节点', {
+					icon: 2
+				});
+				return false;
+			}
+			layer.open({
+				title: '建模/编辑',
+				type: 2,
+				area: ['800px', '650px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: '../../pages/iframe/studentAdmin/updateClass.html',
+				yes: function(guanbi, index) {
+					var newpsw = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					var value = newpsw.editor();
+					newpsw.editor();
+					console.log(value);
+					if(value) {
+						layer.close(guanbi);
+					}
+				}
+			});
+		}
+
+		//日期插件
+		laydate({
+			elem: "#start",
+			event: "focus",
+			max: laydate.now()
+		});
+		laydate({
+			elem: "#end",
+			event: "focus",
+			max: laydate.now()
+
+		});
+
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+
+		});
+		//同步建模数据
+		function modelData() {
+			layer.alert('是否同步数据', {
+				icon: 1,
+				time: 0,
+				content: '您是否要同步数据？',
+				title: '同步确定',
+				btn: ['确定', '取消'],
+				yes: function(index) {
+					layer.close(index);
+					var load = layer.load();
+					$.ajax({
+						type: "get",
+						url: http + "tupu/getUserList",
+						contentType: "application/json;charset=utf-8",
+						dataType: "json",
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("user_token", token);
+						},
+						success: function(data) {
+							layer.close(load);
+							if(data.success == false) {
+								layer.msg(data.msg);
+							}
+							if(data.success) {
+								layer.msg("数据同步成功!");
+							}
+						},
+						error: function(error) {
+							layer.close(load);
+							layer.msg("程序错误，请重试！");
+						}
+					});
+				}
+			});
+		}
+	</script>
+
+</html>

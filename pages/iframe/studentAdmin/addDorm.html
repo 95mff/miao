@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		
+	</head>
+
+	<body>
+
+		<p class="header_title" style="line-height: 40px;">宿舍信息</p>
+		<div class="ibox-content">
+			<form class="form-horizontal"  novalidate="novalidate" id="addDormsForm">
+				<div class="form-group ">
+					<label class="col-sm-3  input_label">宿舍名称：</label>
+					<div class="col-sm-2 col-md-2 col-lg-2">
+						<input id="name" name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入宿舍名称">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-3  input_label">宿舍楼编码：</label>
+					<div class="col-sm-2 col-md-2 col-lg-2">
+						<input id="bianhao" name="bianhao" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入宿舍楼编码">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-3  input_label">排序号：</label>
+					<div class="col-sm-2 col-md-2 col-lg-2">
+						<input id="num" name="num" minlength="1" type="number" class="form-control" required="" aria-required="true" placeholder="请输入排序号">
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../../../js/script/config.js"></script>
+	<script>
+		var index = parent.layer.getFrameIndex(window.name);
+		//添加宿舍
+		function addDorms() {
+			$.validator.setDefaults({
+				highlight: function(e) {
+					$(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+				},
+				success: function(e) {
+					e.closest(".form-group").removeClass("has-error").addClass("has-success")
+				},
+				errorElement: "span",
+				errorPlacement: function(e, r) {
+					e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+				},
+				errorClass: "help-block m-b-none",
+				validClass: "help-block m-b-none"
+			}), $().ready(function() {
+				$("#addDormsForm").validate({
+					rules: {
+
+						name: {
+							required: true,
+							minlength: 2
+						},
+						bianhao:{
+							required: true,
+							minlength: 1
+						},
+						num:{
+							required: true,
+							minlength: 1,
+							maxlength:8
+						}
+						
+
+					},
+					messages: {
+
+						name: {
+							required: "请输入宿舍名称",
+							minlength: "名称必须两个字符以上"
+						},
+						bianhao: {
+							required: "请输入宿舍楼编号",
+							minlength: "宿舍楼编必须一个字符以上"
+						},
+						num: {
+							required: "请输入宿舍排序号",
+							minlength: "排序号必须一个字符以上",
+							maxlength:"排序号必须小于8位"
+						}
+						
+
+					}
+				})
+
+			});
+			if(!$("#addDormsForm").valid()) {
+				return false;
+			}
+			var token = sessionStorage.getItem("user_token");
+			var dormName = $('#name').val();
+			var dormNum = $('#bianhao').val();
+			var sort = $('#num').val();
+			var load=parent.layer.load(0);
+			$.ajax({
+				type: "post",
+				url: http + "dormitory/save",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify({
+					"dormName": dormName,
+					"sort": sort,
+					"dormNum":dormNum
+				}),
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						var obj=data.obj;
+						if(!jQuery.isEmptyObject(obj)) {
+							layer.msg(obj.message);
+						}
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						//调用父级获取宿舍组织架构
+						parent.getDorms();
+						parent.layer.close(index);
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+			
+		}
+		
+	</script>
+
+</html>

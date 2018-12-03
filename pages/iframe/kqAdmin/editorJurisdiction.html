@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/student.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<form class="form-horizontal m-t " novalidate="novalidate">
+
+			<div class="form-group" style="margin-top:100px;">
+				<label class="col-sm-3 control-label input_label">选择考勤组：</label>
+				<div class="col-sm-6 m-t8 textOver">
+					<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="kqGroup(this)">请选择</a>
+					<span id="kq_span"></span>
+				</div>
+			</div>
+		</form>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		var editorId = parent.editorId;
+		var editorName = parent.editorName;
+		//选择参与考勤类型显示隐藏
+		$("input:radio[name='type']").on('ifChecked', function(event) {
+			var index = $(this).val();
+			$('.type_laert .type_alert_inner').eq(index).addClass('show').siblings().removeClass('show');
+
+		});
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+		})
+		var groupIds = [];
+		//获取详情
+		function getJurisdiction() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "post",
+				url: http + "admin/findOne?employerId=" + editorId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							console.log(data);
+							var name = data.attributes.employerName;
+							var id = data.attributes.employerId;
+							var qxList = data.obj;
+							$('#personnal_span').text(name)
+							$('#personnal_span').attr('data-id', id)
+
+							var str = "";
+							for(var i = 0; i < qxList.length; i++) {
+								str += qxList[i].groupName + '，';
+								groupIds.push(qxList[i].groupId)
+
+							}
+
+							$('#kq_span').text(str);
+							layer.close(index);
+
+						}
+					}
+				},
+				error: function() {
+					layer.close(index);
+					layer.msg('程序错误，请重试！');
+				}
+			})
+		}
+		getJurisdiction();
+		//选择考勤组
+
+		function kqGroup(elem) {
+			var specialAttendance = [];
+			layer.open({
+				title: '选择考勤组',
+				type: 2,
+				area: ['700px', '500px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'group.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					var value = iframe.groupCheckbox();
+
+					//获取子界面传过来的参数
+					var str = "";
+					for(var i = 0; i < value.length; i++) {
+						str += value[i].attendanceGroupName + ',';
+						specialAttendance.push(value[i].attendanceGroupId);
+					}
+					$('#kq_span').text(str);
+					groupIds = specialAttendance;
+				}
+			});
+		}
+
+		//编辑权限
+		function ediotrqxSubmit() {
+
+			var groupName = $('#kq_span').text();
+
+			if(groupName == "") {
+				layer.msg('请选择考勤组');
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "admin/updateAdmin",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"employerId": editorId,
+					"groupIds": groupIds
+				}),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.jurisdictionList();
+						parent.layer.close(index);
+					}
+
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg('程序错误，请重试！');
+				}
+			});
+		}
+	</script>
+
+</html>

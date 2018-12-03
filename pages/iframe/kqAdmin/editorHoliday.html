@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/student.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<form class="form-horizontal m-t " novalidate="novalidate">
+			<div class="form-group">
+				<label class="col-sm-3 control-label input_label">假期名称：</label>
+				<div class="col-sm-4">
+					<input name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入假期名称" id="holidayName">
+				</div>
+			</div>
+			<div class="type_laert">
+				<div class="type_alert_inner show" id="jiabanAlert">
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">加班时间：</label>
+						<div class="col-sm-6">
+							<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" id="overTime">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">选择考勤组：</label>
+						<div class="col-sm-6 m-t8">
+							<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="kqGroup(this)">请选择</a>
+							<span id="kqGroup_span"></span>
+						</div>
+					</div>
+
+				</div>
+				<div data-type="休班" class="type_alert_inner" id="xiubanbanAlert">
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">休班时间：</label>
+						<div class="col-sm-6">
+							<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" id="off-duty" placeholder="请选择休班时间">
+						</div>
+					</div>
+
+				</div>
+				<div data-type="换班" class="type_alert_inner" id="huanbanbanAlert">
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">换班时间：</label>
+						<div class="col-sm-6">
+							<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" id="huanbanTime">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">加班时间：</label>
+						<div class="col-sm-6">
+							<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" id="jiabanTime">
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</form>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		laydate({
+			elem: "#overTime",
+			event: "focus",
+			min: laydate.now(+1)
+		});
+		laydate({
+			elem: "#off-duty",
+			event: "focus",
+			min: laydate.now(+1)
+		});
+			var start = {
+			elem: '#huanbanTime',
+			format: 'YYYY-MM-DD',
+			max: '2099-06-16 23:59:59',
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				  
+			}
+		};
+		//加班时间  加班日期必须大于当前日期
+		var end = {
+			elem: '#jiabanTime',
+			format: 'YYYY-MM-DD',
+			min: laydate.now(+1), //设定最小日期为当前日期  
+			max: '2099-06-16 23:59:59', //最大日期
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+
+			}
+		};
+		laydate(start);
+		laydate(end);
+		$('#huanbanTime').val(laydate.now('YYYY-MM-DD'));
+		$('#jiabanTime').val(laydate.now(+1, 'YYYY-MM-DD'));
+
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		var HolidayType = parent.HolidayType;
+		var HolidayId = parent.HolidayId;
+		//判断假期类型
+		if(HolidayType == 1) {
+			$('#jiabanAlert').addClass('show');
+			$('#xiubanbanAlert').removeClass('show');
+			$('#huanbanbanAlert').removeClass('show');
+			getovertimeDetails(); //调用获取加班详情
+
+		}
+		if(HolidayType == 2) {
+			$('#xiubanbanAlert').addClass('show');
+			$('#jiabanAlert').removeClass('show');
+			$('#huanbanbanAlert').removeClass('show');
+			getOffdutyDetails();
+		}
+		if(HolidayType == 3) {
+			$('#huanbanbanAlert').addClass('show');
+			$('#xiubanbanAlert').removeClass('show');
+			$('#jiabanAlert').removeClass('show');
+			getHbDetails();
+
+		}
+		//获取加班详情
+		var specialAttendanceList = [];
+
+		function getovertimeDetails() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "get",
+				url: http + "holiday/info/" + HolidayId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var name = data.obj.name;
+							var holidayDate = data.obj.holidayDate;
+							$('#holidayName').val(name)
+							$('#overTime').val(holidayDate);
+							var specialAttendanceInfoList = data.obj.specialAttendanceInfoList;
+							var attendanceGroupName = "";
+							for(var i = 0; i < specialAttendanceInfoList.length; i++) {
+								attendanceGroupName += specialAttendanceInfoList[i].attendanceGroupName + '，';
+								specialAttendanceList.push({
+									'attendanceGroupId': specialAttendanceInfoList[i].attendanceGroupId,
+									'attendanceGroupName': specialAttendanceInfoList[i].attendanceGroupName,
+									'dayAttendanceId': specialAttendanceInfoList[i].dayAttendanceId,
+									'dayAttendanceName': specialAttendanceInfoList[i].dayAttendanceName
+								})
+							}
+							$('#kqGroup_span').text(attendanceGroupName);
+							layer.close(index);
+
+						}
+					}
+				},
+				error: function() {
+					layer.close(index);
+					layer.msg("程序错误，请重试！");
+				}
+			})
+		}
+
+		//获取假期--休班详情
+		function getOffdutyDetails() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "get",
+				url: http + "holiday/info/" + HolidayId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+
+						var name = data.obj.name;
+						var holidayDate = data.obj.holidayDate;
+						$('#holidayName').val(name)
+						$('#off-duty').val(holidayDate)
+						layer.close(index);
+
+					}
+				},
+				error: function() {
+					layer.close(index);
+					layer.msg("程序错误，请重试！");
+				}
+			})
+		}
+		//获取假期--换班
+		function getHbDetails() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "get",
+				url: http + "holiday/info/" + HolidayId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+
+						var name = data.obj.name;
+						var holidayDate = data.obj.holidayDate;
+						var exchangeDate = data.obj.exchangeDate;
+						$('#holidayName').val(name)
+						$('#jiabanTime').val(holidayDate)
+						$('#huanbanTime').val(exchangeDate)
+						layer.close(index);
+
+					}
+				},
+				error: function() {
+					layer.close(index);
+					layer.msg("程序错误，请重试！");
+				}
+			})
+		}
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+		})
+		//选择考勤组
+		function kqGroup(elem) {
+			layer.open({
+				title: '选择考勤组',
+				type: 2,
+				area: ['700px', '500px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'kqGroup.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					var value = iframe.groupCheckbox();
+					console.log(value);
+					//获取子界面传过来的参数
+					var attendanceGroupName = "";
+					if(value) {
+
+						specialAttendanceList = [];
+						for(var i = 0; i < value.length; i++) {
+							attendanceGroupName += value[i].attendanceGroupName + ',';
+							specialAttendanceList.push({
+								"attendanceGroupId": value[i].attendanceGroupId,
+								"attendanceGroupName": value[i].attendanceGroupName,
+								"dayAttendanceId": value[i].dayAttendanceId,
+								"dayAttendanceName": value[i].dayAttendanceName
+							});
+						}
+						$(elem).siblings('span').text(attendanceGroupName);
+					}
+
+				}
+			});
+		}
+
+		//编辑假期_加班
+		function editorholidayOvertime() {
+			var holidayName = $('#holidayName').val();
+
+			var holidayOverTime = $('#overTime').val();
+			var kqGroup_span = $('#kqGroup_span').text();
+
+			if(holidayName == "") {
+				layer.msg("请填写假期名称!");
+				return false;
+			}
+			if(holidayOverTime == "") {
+				layer.msg("请填写加班时间!");
+				return false;
+			}
+			if(kqGroup_span == "") {
+				layer.msg("请选择考勤组!");
+				return false;
+			}
+			var editorholidayOvertimeData = [];
+
+			editorholidayOvertimeData.push({
+				"name": holidayName,
+				"type": "1",
+				"holidayDate": holidayOverTime,
+				"specialAttendance": specialAttendanceList
+			});
+			console.log(editorholidayOvertimeData)
+			var load = parent.layer.load();
+			$.ajax({
+				type: "PUT",
+				url: http + "holiday/update/" + HolidayId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify(editorholidayOvertimeData[0]),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						parent.holidayList();
+						parent.layer.close(index);
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			})
+		}
+		//编辑假期-休班
+		function editorholidayoffDuty() {
+			var holidayName = $('#holidayName').val();
+			var holidayDate = $('#off-duty').val();
+			if(holidayName == "") {
+				layer.msg("请填写假期名称!");
+				return false;
+			}
+			if(holidayDate == "") {
+				layer.msg("请选择休班时间!");
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "PUT",
+				url: http + "holiday/update/" + HolidayId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"name": holidayName,
+					"type": '2',
+					"holidayDate": holidayDate
+				}),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						parent.holidayList();
+						parent.layer.close(index);
+					}
+				},
+				error: function() {
+					parent.layer.close(load);
+					layer.msg('程序错误，请重试！');
+				}
+			})
+		}
+		//编辑假期--换班
+		function editorholidayHb() {
+			var holidayName = $('#holidayName').val();
+			var holidayDate = $('#jiabanTime').val();
+			var exchangeDate = $('#huanbanTime').val();
+			console.log(exchangeDate);
+			if(holidayName == "") {
+				layer.msg("请填写假期名称!");
+				return false;
+			}
+			if(holidayDate == "") {
+				layer.msg("请选择加班时间!");
+				return false;
+			}
+			if(exchangeDate == "") {
+				layer.msg("请选择调休时间!");
+				return false;
+			}
+			if(exchangeDate == holidayDate) {
+				layer.msg("换班日期必须大于加班日期!");
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "PUT",
+				url: http + "holiday/update/" + HolidayId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"name": holidayName,
+					"type": '3',
+					"holidayDate": holidayDate,
+					"exchangeDate": exchangeDate
+				}),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						parent.holidayList();
+						parent.layer.close(index);
+					}
+				},
+				error: function() {
+					parent.layer.close(load);
+					layer.msg('程序错误，请重试！');
+				}
+			})
+		}
+	</script>
+
+</html>

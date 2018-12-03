@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Document</title>
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<style>
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+				background-color: #fff;
+			}
+			
+			.eleTreeTitle {
+				width: 45%;
+				height: auto;
+				margin-top: 10px;
+				margin-left: 20px;
+				border: 1px solid #ddd;
+				float: left;
+				height: 330px;
+				overflow-y: auto;
+			}
+			
+			.title {
+				background: #F5F5F5;
+				color: #999999;
+				padding-left: 10px;
+				height: 35px;
+				line-height: 35px;
+			}
+			
+			.right {
+				float: right;
+				margin-right: 10px;
+				cursor: pointer;
+				color: #17A488;
+			}
+			
+			.selcted_list {
+				width: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			
+			.selcted_list li {
+				padding-left: 10px;
+				height: 30px;
+				line-height: 30px;
+				border: 1px solid #fff;
+				list-style: none;
+			}
+			
+			.selcted_list li:hover {
+				border: 1px solid #BAD2ED;
+				background: #F3F9FF;
+			}
+			
+			.selcted_list li span {
+				margin-left: 10px;
+			}
+			
+			.fa-close {
+				color: #17A488;
+				float: right;
+				margin-right: 10px;
+				line-height: 30px;
+			}
+			
+			.list-group-item {
+				border: 0 none;
+			}
+			
+			.treeview {}
+		</style>
+	</head>
+
+	<body>
+		<div class="eleTreeTitle">
+			<p class="title">选择教职工</p>
+			<form class="layui-form">
+				<!--<div id="xtree1" class="eleTree"></div>-->
+				<div id="personnal" class="treeview ">
+
+				</div>
+			</form>
+		</div>
+		<div class="eleTreeTitle">
+			<p class="title">已选</p>
+
+			<ul class="selcted_list" id="selcted_list">
+			</ul>
+
+		</div>
+		<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../../js/plugins/treeview/bootstrap-treeview.js"></script>
+		<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../../js/script/config.js"></script>
+		<script src="../../../js/script/login.js"></script>
+
+		<script>
+			var token = sessionStorage.getItem("user_token");
+			var index = parent.layer.getFrameIndex(window.name);
+			var editorId = parent.editorId;
+			var editorName = parent.editorName;
+			
+			var personnalData = [];
+			var flag = false;
+
+			function getPersonnal() {
+
+				var index = layer.msg('加载中', {
+					icon: 16,
+					time: 0
+
+				});
+				$.ajax({
+					type: "get",
+					url: http + "department/getGradeStructure",
+					contentType: "application/json;charset=utf-8",
+					dataType: "json",
+					beforeSend: function(XMLHttpRequest) {
+						XMLHttpRequest.setRequestHeader("user_token", token);
+					},
+					success: function(data) {
+						console.log(data);
+						var personnalList = data.obj;
+						for(var i = 0; i < personnalList.length; i++) {
+							var nodes = [];
+							var employeeInfos = personnalList[i].employeeInfos;
+
+							for(var j = 0; j < employeeInfos.length; j++) {
+
+								nodes.push({
+									"id": employeeInfos[j].id,
+									"text": employeeInfos[j].name,
+
+								})
+							}
+							personnalData.push({
+								'id': personnalList[i].id,
+								'text': personnalList[i].departmentName,
+								"nodes": nodes
+							})
+						}
+						console.log(personnalData);
+						$("#personnal").treeview({
+							color: "#666",
+							data: personnalData,
+							selectedColor: "#fff",
+							selectedBackColor: "#47C8AF",
+							levels: 1,
+							onNodeSelected: function(e, personnalData) {
+								var children = personnalData.nodes;
+								var children2 = personnalData._nodes;
+								if(children2 == undefined) {
+
+									if(children == undefined) {
+										$('#selcted_list').html("");
+										var item = '';
+										item += '<li data-id="' + personnalData.id + '">' + personnalData.text + '</li>';
+										$('#selcted_list').append(item);
+										var employeeId = '';
+										$('#selcted_list li').each(function() {
+											employeeId = $(this).attr('data-id');
+										})
+										$.ajax({
+											type: "post",
+											url: http + "admin/checkEmployee?employeeId=" + employeeId,
+											contentType: "application/json;charset=utf-8",
+											dataType: "json",
+											beforeSend: function(XMLHttpRequest) {
+												XMLHttpRequest.setRequestHeader("user_token", token);
+											},
+											success: function(data) {
+												console.log(data);
+												if(data.success == false) {
+													flag = true;
+													$('#selcted_list').html("");
+													layer.msg(data.msg);
+
+												}else{
+													flag = false;
+												}
+
+											},
+											error: function(error) {
+												layer.msg(data.msg);
+											}
+										});
+										return false;
+									}
+								}
+
+							}
+						})
+						layer.close(index);
+
+					},
+					error: function(error) {
+						layer.close(index);
+						layer.msg("程序错误，请重试！");
+					}
+				});
+
+			}
+			getPersonnal();
+			var employee = {};
+			
+			function submitPersonnal() {
+				var employeeId = '';
+				
+				$('#selcted_list li').each(function() {
+					employeeId = $(this).attr('data-id');
+					employee['employeeId'] = $(this).attr('data-id');
+					employee['employeeName'] = $(this).text();
+				})
+				if(flag) {
+					layer.msg('请重新选择人员');
+					
+					return false;
+				}
+				if(employeeId == "") {
+					layer.msg('请重新选择人员');
+					
+					return false;
+				} else {
+					parent.layer.close(index);
+					return employee;
+
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

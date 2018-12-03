@@ -1,0 +1,49 @@
+var editorPid = parent.editorPid; //获取个人id
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		
+		//获取个人信息
+		function getPersonnalInfo() {
+			$.ajax({
+				type: "get",
+				url: http + "employee/findOne?id="+editorPid,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					if(data.success == false) {
+						layer.msg(data.msg);
+					}
+					if(data.success == true) {
+						console.log(data);
+					}
+				},
+				error: function(error) {
+					layer.msg(data.msg);
+				}
+			});
+		}
+		getPersonnalInfo();
+		//选择职位
+		function stationSelect(elem) {
+			var selected = $(elem).find('option:selected').val();
+			var addPeopleItem = '';
+			if(selected == 3 || selected == 4) {
+				$(elem).parent().parent().siblings('.grade_teacher').show();
+			} else {
+				$(elem).parent().parent().siblings('.grade_teacher').hide();
+			}
+			if(selected == 4) {
+
+				$(elem).parent().parent().siblings('.class').show();
+			} else {
+
+				$(elem).parent().parent().siblings('.class').hide();
+
+			}
+
+			console.log(selected);
+		}

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/student.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<form class="form-horizontal m-t " novalidate="novalidate">
+
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label input_label">选择人员：</label>
+				<div class="col-sm-6 m-t8">
+					<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="kqPersonal(this)">请选择</a>
+					<span id="personnal_span"></span>
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label input_label">选择考勤组：</label>
+				<div class="col-sm-6 m-t8">
+					<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="kqGroup(this)">请选择</a>
+					<span id="kq_span"></span>
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="col-sm-3  input_label">选择人员：</label>
+				<div class="col-sm-4 col-md-4 col-lg-4">
+					<select class="form-control m-t5" name="personnal" id="personnal" required="" aria-required="true">
+					</select>
+				</div>
+			</div>
+		</form>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		//选择考勤组
+		var groupIds = [];
+		function kqGroup(elem) {
+			var specialAttendance = [];
+			layer.open({
+				title: '选择考勤组',
+				type: 2,
+				area: ['700px', '500px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'group.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					var value = iframe.groupCheckbox();
+
+					//获取子界面传过来的参数
+					var str = "";
+					for(var i = 0; i < value.length; i++) {
+						str += value[i].attendanceGroupName + ',';
+						specialAttendance.push(value[i].attendanceGroupId);
+					}
+					$('#kq_span').text(str);
+
+					groupIds = specialAttendance;
+				}
+			});
+
+		}
+		//获取人员
+		function getPersonnal() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+			});
+			$.ajax({
+				type: "get",
+				url: http + "department/getGradeStructure",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					layer.close(index);
+					console.log(data);
+					var personnalList = data.obj;
+					$('#personnal').html("");
+					var optionItem = "";
+					var optionItemNull = '<option value="">请选择人员...</option>';
+					for(var i = 0; i < personnalList.length; i++) {
+						var employeeInfos = personnalList[i].employeeInfos;
+						optionItem += '<optgroup label="' + personnalList[i].departmentName + '">';
+						for(var j = 0; j < employeeInfos.length; j++) {
+							optionItem += '<option value="' + employeeInfos[j].id + '">' + employeeInfos[j].name + '</option>';
+						}
+						optionItem += '</optgroup>';
+					}
+					$('#personnal').append(optionItemNull);
+					$('#personnal').append(optionItem);
+
+				},
+				error: function() {
+					layer.close(index);
+				}
+			})
+		}
+		getPersonnal();
+		var employeeId='';
+		var addFlag=false;
+		$('#personnal').change(function() {
+			employeeId=$(this).val();
+			$.ajax({
+				type: "post",
+				url: http + "admin/checkEmployee?employeeId=" + employeeId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					if(data.success == false) {
+						addFlag=true;
+						layer.msg(data.msg);
+
+					} else {
+						addFlag=false;
+					}
+					
+				},
+				error: function(error) {
+					layer.msg(data.msg);
+				}
+			});
+			
+		})
+		//添加权限
+		function addqxSubmit() {
+			var groupIdName = $('#kq_span').text();
+
+			console.log(groupIdName)
+			if(groupIdName == "") {
+				layer.msg('请选择考勤组！');
+				return false;
+			}
+			if(employeeId==""){
+				layer.msg('请选择人员！');
+				return false;
+			}
+			if(addFlag){
+				layer.msg('该员工已经分配权限，请重新选择！');
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "admin/saveAdmin",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"employerId": employeeId,
+					"groupIds": groupIds
+				}),
+				success: function(data) {
+					console.log(data);
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.jurisdictionList();
+						parent.layer.close(index);
+					}
+
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+	</script>
+
+</html>

@@ -1,0 +1,62 @@
+html,
+body {
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+}
+
+.eleTreeTitle {
+	width: 40%;
+	height: auto;
+	margin-top: 10px;
+	margin-left: 20px;
+	border: 1px solid #ddd;
+	float: left;
+}
+
+.title {
+	background: #F5F5F5;
+	color: #999999;
+	padding-left: 10px;
+	height: 35px;
+	line-height: 35px;
+}
+
+.right {
+	float: right;
+	margin-right: 10px;
+	cursor: pointer;
+	color: #17A488;
+}
+
+.selcted_list {
+	height: 300px;
+	overflow-y: auto;
+}
+
+.selcted_list li {
+	width: 95%;
+	padding-left: 10px;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid #fff;
+}
+
+.selcted_list li:hover {
+	border: 1px solid #BAD2ED;
+	background: #F3F9FF;
+}
+
+.selcted_list li span {
+	margin-left: 10px;
+}
+
+.fa-close {
+	color: #17A488;
+	float: right;
+	margin-right: 10px;
+	line-height: 30px;
+}
+.overflowY{
+	overflow-y: auto !important;
+}

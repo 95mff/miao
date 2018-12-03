@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<div class="ibox-content">
+			<form class="form-horizontal" novalidate="novalidate">
+
+				<div class="form-group " style="margin-top:30px;" id="dissolve">
+
+					<div class="col-sm-12 col-md-12 col-lg-12 textCenter">
+						<input type="checkbox" class="i-checks" name="input[]" value="">
+						<label class="labelCSS">张三</label>
+					</div>
+
+				</div>
+
+			</form>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/script/config.js"></script>
+
+	<script>
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		var obj = parent.obj;
+		var dissolveId = parent.dissolveId;
+		console.log(obj);
+
+		$('#dissolve').html("");
+		var html = "";
+		for(var i = 0; i < obj.length; i++) {
+			html += '<div class="col-sm-12 col-md-12 col-lg-12 textCenter">';
+			html += '<input type="checkbox" class="i-checks" name="relationship[]"  value="' + obj[i].userId + '">';
+			html += '<label class="labelCSS">' + obj[i].name + '</label>';
+			html += '</div>';
+		}
+		$('#dissolve').append(html);
+		$(".i-checks").iCheck({
+			checkboxClass: "icheckbox_square-green",
+			radioClass: "iradio_square-green",
+		});
+
+		//解除关系
+		function dissolveAccountSubmit() {
+			var userId = [];
+			$("#dissolve  input[name='relationship[]']:checkbox").each(function() {
+				if($(this).is(':checked')) {
+					userId.push($(this).val());
+				}
+			});
+			if(jQuery.isEmptyObject(userId)) {
+				layer.alert('请选择要解除的学生', {
+					icon: 2
+				});
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "account/removeRelation?loginId=" + dissolveId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify({
+					"userId": userId
+				}),
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					console.log(data);
+					if(data.success == false) {
+						layer.msg(data.msg);
+					}
+					if(data.success) {
+						layer.msg('解除关系成功', {
+							time: 2000
+						}, function() {
+							parent.allList();
+							parent.layer.close(index);
+						});
+
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误,请重试！");
+				}
+			});
+
+		}
+	</script>
+
+</html>

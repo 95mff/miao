@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/student.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<form class="form-horizontal m-t " novalidate="novalidate">
+			<div class="form-group">
+				<label class="col-sm-3 control-label input_label">假期名称：</label>
+				<div class="col-sm-4">
+					<input name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入假期名称" id="holidayName">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label input_label">参与考勤类型：</label>
+				<div class="col-sm-6 m-t8" id="type">
+					<input type="radio" class="i-checks" name="type" value="1" checked>加班&nbsp;&nbsp;
+					<input type="radio" class="i-checks" name="type" value="2">休班&nbsp;&nbsp;
+					<input type="radio" class="i-checks" name="type" value="3">换班
+
+				</div>
+			</div>
+			<div class="type_laert">
+				<div class="type_alert_inner show" id="jiabanAlert">
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">加班时间：</label>
+						<div class="col-sm-6">
+							<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" id="overTime" placeholder="请选择加班时间">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">选择考勤组：</label>
+						<div class="col-sm-6 m-t8">
+							<a href="#" class="btn btn-sm btn-primary fontSize15" onclick="kqGroup(this)">请选择</a>
+							<span id="kqGroup_span"></span>
+						</div>
+					</div>
+
+				</div>
+				<div data-type="休班" class="type_alert_inner" id="xiubanbanAlert">
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">休班时间：</label>
+						<div class="col-sm-6">
+							<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" id="off-duty" placeholder="请选择休班时间">
+						</div>
+					</div>
+
+				</div>
+				<div data-type="换班" class="type_alert_inner" id="huanbanbanAlert">
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">换班时间：</label>
+						<div class="col-sm-6">
+							<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" id="huanbanTime">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label input_label">加班时间：</label>
+						<div class="col-sm-6">
+							<input name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" id="jiabanTime">
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</form>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		laydate({
+			elem: "#overTime",
+			event: "focus",
+			min: laydate.now(+1)
+		});
+		laydate({
+			elem: "#off-duty",
+			event: "focus",
+			min: laydate.now(+1)
+		});
+		//换班时间
+		var start = {
+			elem: '#huanbanTime',
+			format: 'YYYY-MM-DD',
+			max: '2099-06-16 23:59:59',
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				  
+			}
+		};
+		//加班时间  加班日期必须大于当前日期
+		var end = {
+			elem: '#jiabanTime',
+			format: 'YYYY-MM-DD',
+			min: laydate.now(+1), //设定最小日期为当前日期  
+			max: '2099-06-16 23:59:59', //最大日期
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+
+			}
+		};
+		laydate(start);
+		laydate(end);
+		$('#huanbanTime').val(laydate.now('YYYY-MM-DD'));
+		$('#jiabanTime').val(laydate.now(+1, 'YYYY-MM-DD'));
+
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		//选择参与考勤类型显示隐藏
+		$("input:radio[name='type']").on('ifChecked', function(event) {
+			var addHoliday = $(this).val();
+			console.log(addHoliday);
+			if(addHoliday == 1) {
+				$('.type_laert .type_alert_inner').eq(0).addClass('show').siblings().removeClass('show');
+
+			}
+			if(addHoliday == 2) {
+				$('.type_laert .type_alert_inner').eq(1).addClass('show').siblings().removeClass('show');
+			}
+			if(addHoliday == 3) {
+				$('.type_laert .type_alert_inner').eq(2).addClass('show').siblings().removeClass('show');
+			}
+
+		});
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+		})
+		//选择考勤组
+		var specialAttendance = [];
+
+		function kqGroup(elem) {
+			layer.open({
+				title: '选择考勤组',
+				type: 2,
+				area: ['700px', '500px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'kqGroup.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					var value = iframe.groupCheckbox();
+					//获取子界面传过来的参数
+					if(value){
+						var str = "";
+						for(var i = 0; i < value.length; i++) {
+							str += value[i].attendanceGroupName + ',';
+							specialAttendance.push({
+								"attendanceGroupId": value[i].attendanceGroupId,
+								"dayAttendanceId": value[i].dayAttendanceId
+							});
+						}
+						$(elem).siblings('span').text(str);
+					}
+					
+					
+
+				}
+			});
+		}
+
+		//新增假期_加班
+		function addholidayOvertime() {
+			var holidayName = $('#holidayName').val();
+
+			var holidayOverTime = $('#overTime').val();
+			var kqGroup_span = $('#kqGroup_span').text();
+
+			if(holidayName == "") {
+				layer.msg("请填写假期名称!");
+				
+				return false;
+			}
+			if(holidayOverTime == "") {
+				layer.msg("请填写加班时间!");
+				
+				return false;
+			}
+			if(kqGroup_span == "") {
+				layer.msg("请选择考勤组!");
+				return false;
+			}
+			var addholidayOvertimeData = [];
+
+			addholidayOvertimeData.push({
+				"name": holidayName,
+				"type": "1",
+				"holidayDate": holidayOverTime,
+				"specialAttendance": specialAttendance
+			});
+			var load=parent.layer.load();
+			console.log(addholidayOvertimeData)
+			$.ajax({
+
+				type: "post",
+				url: http + "holiday/add",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify(addholidayOvertimeData[0]),
+				success: function(data) {
+					console.log(data);
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						parent.holidayList();
+						parent.layer.close(index);
+					}
+				},
+				error:function(){
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			})
+		}
+		//新增假期-休班
+		function addholidayoffDuty() {
+			var holidayName = $('#holidayName').val();
+			var holidayDate = $('#off-duty').val();
+			if(holidayName == "") {
+				layer.msg('请填写假期名称!');
+				return false;
+			}
+			if(holidayDate == "") {
+				layer.msg('请选择休班时间!');
+				return false;
+			}
+			var load=parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "holiday/add",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"name": holidayName,
+					"type": '2',
+					"holidayDate": holidayDate
+				}),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						parent.holidayList();
+						parent.layer.close(index);
+					}
+				},
+				error:function(){
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			})
+		}
+		//新增假期--换班
+		function addholidayHb() {
+			var holidayName = $('#holidayName').val();
+			var holidayDate = $('#jiabanTime').val();
+			var exchangeDate = $('#huanbanTime').val();
+			console.log(exchangeDate);
+			if(holidayName == "") {
+				layer.msg('请填写假期名称!');
+				return false;
+			}
+			if(holidayDate == "") {
+				layer.msg('请选择加班时间!');
+				return false;
+			}
+			if(exchangeDate == "") {
+				layer.msg('请选择调休时间!');
+				return false;
+			}
+			if(exchangeDate == holidayDate) {
+				layer.msg('加班日期不能与换班日期为同一天!');
+				return false;
+			}
+			var load=parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "holiday/add",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"name": holidayName,
+					"type": '3',
+					"holidayDate": holidayDate,
+					"exchangeDate": exchangeDate
+				}),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						parent.holidayList();
+						parent.layer.close(index);
+					}
+				},
+				error:function(){
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			})
+		}
+
+		var type;
+		$("#type input[name='type']:radio").each(function() {
+			if($(this).is(':checked')) {
+				type = $(this).val();
+
+			}
+			$(this).on('ifClicked', function(event) {
+				type = $(this).val();
+			})
+
+		});
+		
+	</script>
+
+</html>

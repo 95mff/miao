@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>考勤老师</title>
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/layui/css/layui.css" media="all" rel="stylesheet">
+		<link href="../../../css/layui/css/admin.css" media="all" rel="stylesheet">
+		<link href="../../../css/eleTree.css" media="all" rel="stylesheet">
+		<link href="../../../css/tree.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="eleTreeTitle">
+			<p class="title">选择教职工</p>
+			<form class="layui-form">
+				<div id="xtree1" class="eleTree overflowY"></div>
+			</form>
+		</div>
+		<div class="eleTreeTitle">
+			<p class="title">已选(请在下面列表中选择考勤组长)</p>
+
+			<ul class="selcted_list" id="selcted_list">
+			</ul>
+
+		</div>
+		<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../../js/script/config.js"></script>
+		<script src="../../../js/script/login.js"></script>
+		<script src="../../../css/layui/layui.js"></script>
+		<script src="../../../css/layui/laytree.js"></script>
+		<script>
+			var token = sessionStorage.getItem("user_token");
+			var index = parent.layer.getFrameIndex(window.name);
+			var id = parent.id;
+			var managerId = parent.managerId;
+			//获取员工组织架构
+			function getPersonnelStructure() {
+				var listData = [];
+				var index = layer.msg('加载中', {
+					icon: 16,
+					time: 0
+
+				});
+				$.ajax({
+					type: "get",
+					url: http + "attendanceGroup/getPersonnelStructure/" + id,
+					contentType: "application/json;charset=utf-8",
+					dataType: "json",
+					beforeSend: function(XMLHttpRequest) {
+						XMLHttpRequest.setRequestHeader("user_token", token);
+					},
+					success: function(data) {
+						if(data.success == false) {
+							layer.msg(data.msg);
+							return false;
+						}
+						if(data.success) {
+							userToken(data.restCode, data.msg);
+							if(data.restCode == 200) {
+								console.log(data);
+								var list = data.obj;
+								for(var i = 0; i < list.length; i++) {
+									var item = {};
+									item['label'] = list[i].name;
+									item['id'] = list[i].id;
+									var children = [];
+									item['children'] = children;
+									var employeeInfos = list[i].employeeInfos;
+									if(employeeInfos.length == 0) {
+										item['disabled'] = true;
+
+									} else {
+										item['disabled'] = false;
+									}
+									for(var j = 0; j < employeeInfos.length; j++) {
+										var childrenItem = {};
+										childrenItem['id'] = employeeInfos[j].id;
+										childrenItem['label'] = employeeInfos[j].name;
+										childrenItem['checked'] = employeeInfos[j].isCheck;
+
+										children.push(childrenItem);
+
+									}
+									listData.push(item);
+								}
+								layui.config({
+									base: "../layui/lay/mymodules/"
+								}).use(['jquery', 'eleTree'], function() {
+									var $ = layui.jquery;
+									var eleTree = layui.eleTree;
+
+									eleTree.render({
+										elem: '.eleTree',
+										data: listData,
+										showCheckbox: true,
+										drag: true,
+										accordion: true
+									});
+									//获取选中的值
+									var checkData = eleTree.checkedData;
+									var listItem = '';
+									for(var i = 0; i < checkData.length; i++) {
+										listItem += '<li data-id="' + checkData[i].id + '"><input type="radio" class="i-checks" name="managerName" value="' + checkData[i].id + '"> <span>' + checkData[i].label + '</span></li>';
+									}
+									$('#selcted_list').append(listItem);
+									$('#selcted_list li').each(function() {
+										var dataId = $(this).attr('data-id');
+										if(dataId == managerId) {
+											$(this).find('input').iCheck('check');
+
+										}
+									})
+									$(".i-checks").iCheck({
+										checkboxClass: "icheckbox_square-green",
+										radioClass: "iradio_square-green",
+									})
+
+									eleTree.on("checkbox", function(checkedData, a) {
+										checkData = eleTree.checkedData;
+										console.log(checkData);
+										console.log(a);
+										$('#selcted_list').html("");
+										var listItem = '';
+										for(var i = 0; i < checkData.length; i++) {
+
+											$('#selcted_list').html("");
+											var children = checkData[i].children;
+
+											if(children == undefined) {
+												listItem += '<li data-id="' + checkData[i].id + '"><input type="radio" class="i-checks" name="managerName" value="' + checkData[i].id + '" > <span>' + checkData[i].label + '</span></li>';
+
+												$('#selcted_list').append(listItem);
+												$('#selcted_list li').each(function() {
+													var dataId = $(this).attr('data-id');
+													if(dataId == managerId) {
+														$(this).find('input').iCheck('check');
+
+													}
+												})
+											}
+										}
+										$(".i-checks").iCheck({
+											checkboxClass: "icheckbox_square-green",
+											radioClass: "iradio_square-green",
+										})
+
+									})
+
+								});
+
+							}
+						}
+						layer.close(index);
+
+					},
+					error: function(error) {
+						layer.close(index);
+						layer.msg('程序错误，请重试！');
+					}
+				});
+			}
+
+			//      
+			getPersonnelStructure();
+
+			//提交
+			var checkedList = [];
+
+			function submitPersonnal() {
+				var str = '';
+				var managerId;
+				var items = [];
+				$('#selcted_list li').each(function() {
+					var item = {};
+					item['id'] = $(this).attr('data-id');
+					item['name'] = $(this).find('span').text();
+					items.push(item);
+					$("#selcted_list li input[name='managerName']").each(function() {
+						if($(this).is(':checked')) {
+							managerId = $(this).val();
+						}
+					})
+					
+
+				})
+
+				checkedList['managerId'] = managerId;
+				checkedList['items'] = items;
+				console.log(checkedList);
+				if(!jQuery.isEmptyObject(checkedList.items)) {
+					if(checkedList.managerId == undefined) {
+						layer.msg('请选择考勤组长');
+						return false;
+					} else {
+						parent.layer.close(index);
+						return checkedList;
+					}
+				}else{
+					parent.layer.close(index);
+					return checkedList;
+				}
+				
+			}
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<div>
+			<ul class="img_file_list">
+				<li>
+					<span>人脸上传：
+					<a class="btn btn-sm btn-success relative"> 点击上传图片
+						<input type="file" class="filhide_btn ">
+					</a>
+					</span>
+					<ul class="img_list">
+						<li>
+							<img src="../../../img/u152.svg" class="img_file_img" />
+							<span class="wrong">×</span>
+						</li>
+						<li>
+							<img src="../../../img/u152.svg" class="img_file_img" />
+							<span class="wrong">×</span>
+						</li>
+						<li>
+							<img src="../../../img/u152.svg" class="img_file_img" />
+							<span class="wrong">×</span>
+						</li>
+						<li>
+							<img src="../../../img/u152.svg" class="img_file_img" />
+							<span class="wrong">×</span>
+						</li>
+						<li>
+							<img src="../../../img/u152.svg" class="img_file_img" />
+							<span class="wrong">×</span>
+						</li>
+					</ul>
+
+				</li>
+
+			</ul>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/treeview/bootstrap-treeview.js"></script>
+	<script src="../../../js/demo/treeview-demo.min.js"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../../../js/isIDCard.js"></script>
+	<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+
+	<script>
+		//var parentId=parent.a;获取父元素的变量
+
+		function tijiao() {
+			var index = parent.layer.getFrameIndex(window.name);
+			var id = $('#a').val();
+			return id;
+		}
+
+		function getMess() {
+			//调用父页面方法
+			parent.ToChildren();
+
+			alert("获取父页参数:" + parent.server_type);
+		}
+
+		function add() {
+			var flag = true;
+			$.validator.setDefaults({
+				highlight: function(e) {
+					$(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+				},
+				success: function(e) {
+					e.closest(".form-group").removeClass("has-error").addClass("has-success")
+				},
+				errorElement: "span",
+				errorPlacement: function(e, r) {
+					e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+				},
+				errorClass: "help-block m-b-none",
+				validClass: "help-block m-b-none"
+			}), $().ready(function() {
+				$("#addDepartment").validate({
+					rules: {
+
+						name: {
+							required: true,
+							minlength: 2
+						},
+						num: {
+							required: true,
+							minlength: 1
+						}
+
+					},
+					messages: {
+
+						name: {
+							required: "请输入部门名称",
+							minlength: "姓名必须两个字符以上"
+						},
+						num: {
+							required: "请输入排序号",
+							minlength: "排序号必须一个字符以上"
+						}
+
+					}
+				})
+
+			});
+			if(!$("#addDepartment").valid()) {
+				flag = false;
+				return;
+			}
+			$.ajax({
+
+			})
+			return flag;
+		}
+	</script>
+
+</html>

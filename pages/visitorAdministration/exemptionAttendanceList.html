@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<title>智慧校园管理平台</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" type="images/x-icon" href="../../favicon.ico">
+		<link href="../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link rel="stylesheet" href="../../css/index_add.css" />
+		<link rel="stylesheet" href="../../css/student.css" />
+		<link href="../../css/myPagination.css" rel="stylesheet">
+		<link href="../../css/iconfont_icon.css" rel="stylesheet">
+		
+	</head>
+
+	<body class="gray-bg top-navigation">
+
+		<div id="wrapper">
+			<div id="page-wrapper" class="gray-bg">
+				<div class="row border-bottom white-bg">
+					<nav class="navbar navbar-static-top" role="navigation">
+						<div class="nav_header">
+							<div class="nav_header_top">
+								<div class="nav_header_top_inner">
+									<p style="float: left;">
+										<img src="../../img/logo_content.png" alt="头像" title="头像" class="nav_header_tou" />
+										<span class="logo_title">智慧校园运营管理系统</span>	
+									</p>
+									<ul class="nav_list">
+										<li>
+											<a href="../../index.html"><i class="icon iconfont icon-yuangongguanli-copy"></i>员工管理</a>
+
+										</li>
+										<li>
+											<a href="../studentAdministration/grade.html"><i class="icon iconfont icon-xueshengguanli"></i>学生管理</a>
+											<ul class="nav_list_menu" style="margin-left:-160px;">
+												<li>
+													<a href="../studentAdministration/grade.html">年级管理</a>
+												</li>
+												<li>
+													<a href="../studentAdministration/dorms.html">宿舍管理</a>
+												</li>
+
+											</ul>
+										</li>
+										<li class="nav_listActive">
+											<a href="../visitorAdministration/stranger.html"><i class="icon iconfont icon-fangkeguanli"></i>来访管理</a>
+											<ul class="nav_list_menu show" style="margin-left:-260px;">
+												<li >
+													<a href="../visitorAdministration/stranger.html">陌生人员名单</a>
+												</li>
+
+												<li>
+													<a href="../visitorAdministration/blacklist.html">黑名单</a>
+												</li>
+												<li>
+													<a href="../visitorAdministration/whitelist.html">白名单</a>
+												</li>
+												<li class="nav_list_menuActive">
+													<a href="../visitorAdministration/exemptionAttendanceList.html">免考勤名单</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="../kqAdministration/dayRule.html"><i class="icon iconfont icon-kaoqinguanli"></i>考勤管理</a>
+											<ul class="nav_list_menu " style="margin-left:-400px;">
+												<li>
+													<a href="../kqAdministration/dayRule.html">日考勤规则</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/weekRule.html">周考勤规则</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/kq_group.html">考勤组管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/holiday.html">假期管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/pushTime.html">推送时间管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/jurisdiction.html">权限管理</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="../kqCount/AttendanceStatistics.html"><i class="icon iconfont icon-tongji"></i>考勤统计</a>
+
+										</li>
+
+										<li>
+											<a href="../systemSetup/account.html"><i class=" icon iconfont icon-xitongguanli-fuben"></i>系统设置</a>
+											<ul class="nav_list_menu" style="margin-left:-640px;">
+
+												<li>
+													<a href="../systemSetup/account.html">账号管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/schoolGate.html">监控门管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/equipment.html">设备管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/screen.html">大屏管理</a>
+												</li>
+
+											</ul>
+										</li>
+									</ul>
+								</div>
+								<p class="user">
+									<span >欢迎您：<span class="userName">lcyz_admin</span></span>
+									<a href="../../login.html" class="color"><i class="icon iconfont icon-tuichu"></i>退出登录</a>
+								</p>
+							</div>
+						</div>
+
+					</nav>
+				</div>
+				<div class="wrapper wrapper-content">
+					<div class="container white-bg">
+						<div class="row">
+							<div class="col-md-12 content_title">免考勤人员管理</div>
+
+						</div>
+						<div class="row">
+
+							<!--右侧-->
+							<div class="col-lg-12">
+								<div class="row m-r5 border-bottom">
+
+									<form class="form-horizontal ">
+
+										<div class="form-group col-md-5">
+
+											<label class="col-sm-4 p-lNone control-label input_label">开始时间：</label>
+											<div class="col-sm-8 p-lNone">
+												<input id="start" name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" placeholder="请选择开始时间...">
+
+											</div>
+
+										</div>
+										<div class="form-group col-md-5">
+
+											<label class="col-sm-4 p-lNone control-label input_label">结束时间：</label>
+											<div class="col-sm-8 p-lNone">
+												<input id="end" name="starttime" minlength="2" type="text" class="laydate-icon form-control layer-date" placeholder="请选择结束时间...">
+
+											</div>
+
+										</div>
+
+										<div class="form-group col-md-1 m-t5">
+
+											<a href="#" class="btn btn-primary" id="searchBtn">查询</a>
+										</div>
+
+									</form>
+								</div>
+								<!--list-->
+								<div class="row">
+									<div class="col-md-12 list-title">
+										<i class="glyphicon glyphicon-stop fontsize"></i> 免考勤人员管理
+									</div>
+									<div class="col-md-12 m-t10">
+
+										<div class="ibox float-e-margins ">
+
+											<div class="ibox-content pnone">
+
+												<div class="table-responsive relative">
+													<table class="table table-striped" id="strangerTable">
+														<thead>
+															<tr>
+																<th>时间</th>
+																<th>免考勤人员头像</th>
+																<th>当天到访次数</th>
+																<th>历史到访次数</th>
+																<th>历史到访天数</th>
+																<th>备注</th>
+
+																<th style="text-align: center;">操作</th>
+
+															</tr>
+														</thead>
+														<tbody>
+
+														</tbody>
+													</table>
+
+												</div>
+												<!--分页-->
+												<div id="pagination" class="pagination"></div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<script src="../../js/jquery.min.js?v=2.1.4"></script>
+			<script src="../../js/bootstrap.min.js?v=3.3.6"></script>
+			<script src="../../js/content.min.js?v=1.0.0"></script>
+			<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+			<script src="../../js/plugins/layer/layer.min.js"></script>
+			<script src="../../js/myPagination.js"></script>
+			<script src="../../js/common.js"></script>
+			<script src="../../js/script/config.js"></script>
+	</body>
+	<script>
+		laydate({
+			elem: "#start",
+			event: "focus",
+
+		});
+		laydate({
+			elem: "#end",
+			event: "focus"
+		});
+		//		$('#start').val(laydate.now(-7, 'YYYY-MM-DD'));
+		//		$('#end').val(laydate.now(0, 'YYYY-MM-DD'));
+		var token = sessionStorage.getItem("user_token");
+		var pageSize = 10;
+		var pageNumber = 1;
+		var findStartTime = $('#start').val();
+		var findEndTime = $('#end').val();
+		//获取免考勤名单
+		function allExemptionAttendance() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "post",
+				url: http + "visit/findVisitByCondition",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"visitType": "3",
+					"findStartTime": findStartTime,
+					"findEndTime": findEndTime,
+					"pageSize": pageSize,
+					"pageNumber": pageNumber,
+					"comment": ""
+				}),
+				success: function(data) {
+					console.log(data)
+					layer.close(index);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var obj = data.obj;
+							if(!jQuery.isEmptyObject(obj)) {
+								var list = data.obj.list;
+								$('#pagination').show();
+								$('#strangerTable tbody').html('');
+								var tdItems = '';
+								for(var i = 0; i < list.length; i++) {
+									tdItems += '<tr data-id="' + list[i].id + '"  data-model="' + list[i].modelId + '">';
+									tdItems += '<td>' + list[i].visitTime + '</td>';
+									tdItems += '<td id="imgDesils' + i + '"><img src="' + list[i].headPortraitUrl + '" class="headerImg2" /></td>';
+									tdItems += '<td>' + list[i].dayCount + '</td>';
+									tdItems += '<td>' + list[i].historySumCount + '</td>';
+									tdItems += '<td>' + list[i].historyDayCount + '</td>';
+									if(list[i].comment==null||list[i].comment==undefined||list[i].comment==""){
+										tdItems += '<td class="comment">无</td>';
+									}else{
+										
+										tdItems += '<td class="comment">' + list[i].comment + '</td>';
+									}
+									tdItems += '<td style="text-align: center;">';
+									tdItems += '<a href="javaScript:void(0)" onclick="details(this)"><button class="btn btn-sm btn-primary" >查看详情</button></a>';
+									tdItems += '<button class="btn btn-sm btn-primary" onclick="sign(this)">标记</button>';
+
+									tdItems += '</td>';
+
+									tdItems += '</tr>';
+								}
+								$('#strangerTable tbody').append(tdItems);
+								layer.use('extend/layer.ext.js', function() {
+									$('#strangerTable tbody tr').each(function(i) {
+										layer.photos({
+											photos: "#imgDesils" + i, //选择器,
+											anim: 2,
+											area: ['200px', '200px'],
+
+										})
+									})
+								})
+								new myPagination({
+									id: 'pagination',
+									curPage: data.obj.pageNum, //初始页码
+									pageTotal: data.obj.pages, //总页数
+									pageAmount: data.obj.pageSize, //每页多少条
+									dataTotal: data.obj.total, //总共多少条数据
+									pageSize: 5, //可选,分页个数
+									showPageTotalFlag: true, //是否显示数据统计
+									showSkipInputFlag: false, //是否支持跳转
+									getPage: function(page) {
+										//获取当前页
+										pageNumber = page;
+
+										allStranger();
+									}
+								})
+							} else {
+								$('#pagination').hide();
+								$('#strangerTable tbody').html('');
+								var tdItems = '<tr><th colspan="5" style="text-align: center;">暂无数据</th></tr>';
+								$('#strangerTable tbody').append(tdItems);
+							}
+
+						}
+					}
+				},
+				error: function(error) {
+					layer.close(index);
+					layer.msg("程序错误,请重试！");
+				}
+
+			})
+		}
+		allExemptionAttendance();
+		//查询
+		$('#searchBtn').click(function() {
+			findStartTime = $('#start').val();
+			findEndTime = $('#end').val();
+			allExemptionAttendance();
+		})
+		//标记
+		var modelId = "";
+		var Remarks='';
+		function sign(elem) {
+			modelId = $(elem).parent().parent().attr('data-model');
+			Remarks = $(elem).parent().siblings('.comment').text();
+			layer.open({
+				title: '添加标记',
+				type: 2,
+				area: ['800px', '450px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: '../../pages/iframe/visitorAdmin/exemptionAttendanceBiaoji.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					iframe.signSubmit();
+
+				}
+			});
+
+		}
+		//查看详情
+		function details(elem) {
+			var model = $(elem).parent().parent().attr("data-model");
+			findStartTime = $('#start').val();
+			findEndTime = $('#end').val();
+
+			window.location.href = "exemptionAttendance_details.html?modelId=" + model + '&startTime=' + findStartTime + '&endTime=' + findEndTime;
+		}
+	</script>
+
+</html>

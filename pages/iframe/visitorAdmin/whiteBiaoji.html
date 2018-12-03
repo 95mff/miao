@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		
+	</head>
+
+	<body>
+
+		<p class="header_title" style="line-height: 40px;">标记信息</p>
+		<div class="ibox-content">
+			<form class="form-horizontal"  novalidate="novalidate" id="signForm">
+				<div class="form-group ">
+					<label class="col-sm-2  input_label m-t5">标记：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="" id="sign">
+							<option value="2">白名单</option>
+							<option value="1">黑名单</option>
+							<option value="3">免考勤名单</option>
+							<option value="0">陌生人名单</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label m-t5">备注：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<textarea class="form-control" style="height: 140px;resize: none;" id="remarks" equired="" aria-required="true" ></textarea>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/script/config.js"></script>
+	<script>
+		var modelId=parent.modelId;//获取父元素的变量
+		var Remarks=parent.Remarks;
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		$('#remarks').val(Remarks);
+		function signSubmit() {
+			var visitType = $('#sign option:selected').val();
+			var remarks = $('#remarks').val();
+			var load=parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "visit/signVisitor",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify({
+					"modelId":modelId,
+				    "visitType":visitType,
+				    "comment":remarks
+				}),
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.allWhite();
+						parent.layer.close(index);
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+		
+	</script>
+
+</html>

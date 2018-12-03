@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<title>智慧校园管理平台</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" type="images/x-icon" href="../../favicon.ico">
+		<link href="../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../css/student.css" rel="stylesheet" />
+		<link href="../../css/myPagination.css" rel="stylesheet">
+		<link href="../../css/index_add.css" rel="stylesheet" />
+		<link href="../../css/iconfont_icon.css" rel="stylesheet" />
+
+	</head>
+
+	<body class="gray-bg top-navigation">
+
+		<div id="wrapper">
+			<div id="page-wrapper" class="gray-bg">
+				<div class="row border-bottom white-bg">
+					<nav class="navbar navbar-static-top" role="navigation">
+						<div class="nav_header">
+							<div class="nav_header_top">
+								<div class="nav_header_top_inner">
+									<p style="float: left;">
+										<img src="../../img/logo_content.png" alt="头像" title="头像" class="nav_header_tou" />
+										<span class="logo_title">智慧校园运营管理系统</span>	
+									</p>
+									<ul class="nav_list">
+										<li>
+											<a href="../../index.html"><i class="icon iconfont icon-yuangongguanli-copy"></i>员工管理</a>
+
+										</li>
+										<li>
+											<a href="../studentAdministration/grade.html"><i class="icon iconfont icon-xueshengguanli"></i>学生管理</a>
+											<ul class="nav_list_menu" style="margin-left:-160px;">
+												<li>
+													<a href="../studentAdministration/grade.html">年级管理</a>
+												</li>
+												<li>
+													<a href="../studentAdministration/dorms.html">宿舍管理</a>
+												</li>
+
+											</ul>
+										</li>
+										<li>
+											<a href="../visitorAdministration/stranger.html"><i class="icon iconfont icon-fangkeguanli"></i>来访管理</a>
+											<ul class="nav_list_menu" style="margin-left:-260px;">
+												<li>
+													<a href="../visitorAdministration/stranger.html">陌生人员名单</a>
+												</li>
+
+												<li>
+													<a href="../visitorAdministration/blacklist.html">黑名单</a>
+												</li>
+												<li>
+													<a href="../visitorAdministration/whitelist.html">白名单</a>
+												</li>
+												<li>
+													<a href="../visitorAdministration/exemptionAttendanceList.html">免考勤名单</a>
+												</li>
+											</ul>
+										</li>
+										<li class="nav_listActive">
+											<a href="../kqAdministration/dayRule.html"><i class="icon iconfont icon-kaoqinguanli"></i>考勤管理</a>
+											<ul class="nav_list_menu show" style="margin-left:-400px;">
+												<li>
+													<a href="../kqAdministration/dayRule.html">日考勤规则</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/weekRule.html">周考勤规则</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/kq_group.html">考勤组管理</a>
+												</li>
+												<li class="nav_list_menuActive">
+													<a href="../kqAdministration/holiday.html">假期管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/pushTime.html">推送时间管理</a>
+												</li>
+												<li>
+													<a href="../kqAdministration/jurisdiction.html">权限管理</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="../kqCount/AttendanceStatistics.html"><i class="icon iconfont icon-tongji"></i>考勤统计</a>
+
+										</li>
+
+										<li>
+											<a href="../systemSetup/account.html"><i class=" icon iconfont icon-xitongguanli-fuben"></i>系统设置</a>
+											<ul class="nav_list_menu" style="margin-left:-640px;">
+
+												<li>
+													<a href="../systemSetup/account.html">账号管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/schoolGate.html">监控门管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/equipment.html">设备管理</a>
+												</li>
+												<li>
+													<a href="../systemSetup/screen.html">大屏管理</a>
+												</li>
+
+											</ul>
+										</li>
+									</ul>
+								</div>
+								<p class="user">
+									<span >欢迎您：<span class="userName">lcyz_admin</span></span>
+									<a href="../../login.html" class="color"><i class="icon iconfont icon-tuichu"></i>退出登录</a>
+								</p>
+							</div>
+						</div>
+
+					</nav>
+				</div>
+				<div class="wrapper wrapper-content">
+					<div class="container white-bg">
+						<div class="row relative">
+							<div class="col-md-12 content_title details_title">
+								<h3 class="left">假期管理
+									<button class="btn btn-sm btn-primary fontSize15 m-l15" onclick="addHoliday()"><i class="fa fa-plus" ></i>新增假期</button>
+								</h3>
+							</div>
+						</div>
+						<div class="row">
+							<form class="form-horizontal m-t" novalidate="novalidate">
+								<div class="form-group col-sm-3 col-lg-3 col-md-3 p-lNone p-rNone m-t5">
+									<label class="col-sm-4 control-label p-lNone p-rNone input_label" style="padding-top:0px;">名称：</label>
+									<div class="col-sm-8 p-lNone p-rNone">
+										<input name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入名称" id="name">
+									</div>
+								</div>
+								<div class="form-group col-sm-2 col-lg-2 col-md-2 p-lNone p-rNone">
+									<label class="col-sm-5 control-label p-lNone p-rNone input_label">类型：</label>
+									<div class="col-sm-7 p-lNone p-rNone">
+										<select class="form-control m-t5 p-lNone p-rNone" name="" id="type">
+											<option value="">全部</option>
+											<option value="1">加班</option>
+											<option value="2">休班</option>
+											<option value="3">换班</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-3 col-lg-3 col-md-3 p-lNone p-rNone m-t0">
+									<label class="col-sm-5 control-label p-lNone p-rNone input_label">开始时间：</label>
+									<div class="col-sm-6 p-lNone p-rNone">
+										<input name="name" minlength="2" type="text" class=" laydate-icon form-control layer-date" required="" aria-required="true" id="jiabanTime2" placeholder="请选择开始时间">
+									</div>
+								</div>
+								<div class="form-group col-sm-3 col-lg-3 col-md-3 p-lNone p-rNone m-t0">
+									<label class="col-sm-4 control-label p-lNone p-rNone input_label">结束时间：</label>
+									<div class="col-sm-7 p-lNone p-rNone">
+										<input name="name" minlength="2" type="text" class="laydate-icon form-control layer-date" required="" aria-required="true" id="creatTime" placeholder="请选择结束时间">
+
+									</div>
+								</div>
+								<div class="form-group col-sm-1 col-lg-1 col-md-1 p-lNone p-rNone m-t5">
+									<a href="#" class="btn btn-sm btn-primary fontSize15 m-l15 left" onclick="searchBtn()">查询</a>
+								</div>
+
+							</form>
+						</div>
+						<div class="row">
+
+							<!--右侧-->
+							<div class="col-lg-12">
+								<!--list-->
+								<div class="row">
+
+									<div class="col-md-12 m-t10 relative">
+
+										<div class="ibox float-e-margins ">
+
+											<div class="ibox-content pnone">
+
+												<div class="table-responsive relative">
+													<table class="table table-striped" id="holidayTable">
+														<thead>
+															<tr>
+																<th>名称</th>
+																<th>类型</th>
+																<th>时间</th>
+																<th>创建时间</th>
+																<th style="text-align: center;">操作</th>
+
+															</tr>
+														</thead>
+														<tbody>
+
+														</tbody>
+													</table>
+
+												</div>
+												<!--分页-->
+												<div id="pagination" class="pagination"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<script src="../../js/jquery.min.js?v=2.1.4"></script>
+			<script src="../../js/bootstrap.min.js?v=3.3.6"></script>
+			<script src="../../js/content.min.js?v=1.0.0"></script>
+			<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+			<script src="../../js/plugins/layer/layer.min.js"></script>
+
+			<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+
+			<script src="../../js/myPagination.js"></script>
+			<script src="../../js/common.js"></script>
+			<script src="../../js/script/config.js"></script>
+			<script src="../../js/script/login.js"></script>
+
+	</body>
+	<script>
+		laydate({
+			elem: "#jiabanTime2",
+			event: "focus",
+
+		});
+		laydate({
+			elem: "#creatTime",
+			event: "focus",
+
+		});
+		var token = sessionStorage.getItem("user_token");
+		var pageNum = 1;
+		var pageSize = 10;
+		var name = $('#name').val();
+		var type = $('#type option:selected').val();
+		var beginDate = $('#jiabanTime2').val();
+		var endDate = $('#creatTime').val();
+		//获取假期列表
+		function holidayList() {
+			var index = layer.msg('加载中', {
+				icon: 16,
+				time: 0
+
+			});
+			$.ajax({
+				type: "post",
+				url: http + "holiday/list",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"name": name,
+					"type": type,
+					"beginDate": beginDate,
+					"endDate": endDate,
+					"pageNum": pageNum,
+					"pageSize": pageSize
+				}),
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						layer.close(index);
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var list = data.obj.list;
+							if(!jQuery.isEmptyObject(list)) {
+								$('#pagination').show();
+								$('#holidayTable tbody').html('');
+								var tdItems = '';
+								for(var i = 0; i < list.length; i++) {
+
+									tdItems += '<tr data-id="' + list[i].id + '" data-type="' + list[i].type + '">';
+									tdItems += '<td>' + list[i].name + '</td>';
+									if(list[i].type == 1) {
+										tdItems += '<td>加班</td>';
+									}
+									if(list[i].type == 2) {
+										tdItems += '<td>休班</td>';
+									}
+									if(list[i].type == 3) {
+										tdItems += '<td>换班</td>';
+									}
+									tdItems += '<td>' + list[i].holidayDate + '</td>';
+									tdItems += '<td>' + list[i].createAt + '</td>';
+									tdItems += '<td style="text-align: center;">';
+									tdItems += '<button class="btn btn-sm btn-primary" onclick="editorHoliday(this)">编辑</button>';
+									tdItems += '<button class="btn btn-sm btn-primary" onclick="delHoliday(this)" >删除</button>';
+									tdItems += '</td>';
+									tdItems += '</tr>';
+
+								}
+								$('#holidayTable tbody').append(tdItems);
+								new myPagination({
+									id: 'pagination',
+									curPage: data.obj.pageNum, //初始页码
+									pageTotal: data.obj.pages, //总页数
+									pageAmount: data.obj.size, //每页多少条
+									dataTotal: data.obj.total, //总共多少条数据
+									pageSize: 5, //可选,分页个数
+									showPageTotalFlag: true, //是否显示数据统计
+									showSkipInputFlag: false, //是否支持跳转
+									getPage: function(page) {
+										//获取当前页
+										pageNum = page;
+										holidayList();
+									}
+								})
+
+							} else {
+								$('#pagination').hide();
+								$('#holidayTable tbody').html('');
+								var tdItems = '<tr><th colspan="5" style="text-align: center;">暂无数据</th></tr>';
+								$('#holidayTable tbody').append(tdItems);
+
+							}
+						}
+					}
+
+				},
+				error: function(error) {
+					layer.close(index);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+		holidayList();
+		//新增假期
+		function addHoliday() {
+			layer.open({
+				title: '新增假期',
+				type: 2,
+				area: ['800px', '600px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: '../../pages/iframe/kqAdmin/addHoliday.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+
+					//获取子界面传过来的参数
+					console.log(iframe.type)
+					if(iframe.type == 1) {
+						iframe.addholidayOvertime();
+
+					}
+					if(iframe.type == 2) {
+						iframe.addholidayoffDuty();
+					}
+					if(iframe.type == 3) {
+						iframe.addholidayHb();
+					}
+				}
+			});
+		}
+		//编辑假期
+		var HolidayType = '';
+		var HolidayId = '';
+
+		function editorHoliday(elem) {
+			HolidayType = $(elem).parent().parent().attr('data-type');
+			HolidayId = $(elem).parent().parent().attr('data-id');
+
+			layer.open({
+				title: '编辑假期',
+				type: 2,
+				area: ['800px', '600px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: '../../pages/iframe/kqAdmin/editorHoliday.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+
+					//获取子界面传过来的参数
+					if(HolidayType == 1) {
+						iframe.editorholidayOvertime();
+
+					}
+					if(HolidayType == 2) {
+						iframe.editorholidayoffDuty(); //休班
+					}
+					if(HolidayType == 3) {
+						iframe.editorholidayHb(); //换班
+					}
+				}
+			});
+		}
+		//搜索
+		function searchBtn() {
+			name = $('#name').val();
+			type = $('#type option:selected').val();
+			beginDate = $('#jiabanTime2').val();
+			endDate = $('#creatTime').val();
+			holidayList();
+		}
+		//删除假期
+		function delHoliday(elem) {
+			var holidayId = $(elem).parent().parent().attr('data-id');
+			layer.alert('', {
+				icon: 2,
+				time: 0,
+				content: '您确定要删除这条记录吗？',
+				title: '删除确认',
+				btn: ['确定', '取消'],
+				yes: function(index) {
+					layer.close(index);
+					var load = layer.load();
+					$.ajax({
+						type: "DELETE",
+						url: http + "holiday/deleted/" + holidayId,
+						contentType: "application/json;charset=utf-8",
+						dataType: "json",
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("user_token", token);
+						},
+						success: function(data) {
+							layer.close(load);
+							if(data.success == false) {
+								layer.msg(data.msg);
+							}
+							if(data.success) {
+								layer.msg('删除假期成功', {
+									time: 1000
+								}, function() {
+									holidayList();
+								});
+							}
+						},
+						error: function(error) {
+							layer.close(load);
+							layer.msg("程序错误，请重试！");
+						}
+					});
+				}
+			});
+		}
+	</script>
+
+</html>

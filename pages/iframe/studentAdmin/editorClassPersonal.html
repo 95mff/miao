@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<p class="header_title" style="line-height: 40px;">人员信息</p>
+		<div class="ibox-content">
+			<form class="form-horizontal m-t " id="editorClassPersonnalForm" novalidate="novalidate">
+				<div class="form-group">
+					<label class="col-sm-3 control-label">姓名：</label>
+					<div class="col-sm-5">
+						<input id="name" name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入姓名">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">性别：</label>
+					<div class="col-sm-5">
+						<div class="radio i-checks" id="sex">
+							<label><input type="radio"  value="0" name="sex"> <i></i> 男</label>
+							<label><input type="radio" value="1" name="sex"> <i></i>女</label>
+						</div>
+
+					</div>
+				</div>
+				<div class="form-group  ">
+					<label class="col-sm-3 control-label">年级：</label>
+					<div class="col-sm-5">
+						<select class="form-control m-t5" name="gradeSelect" id="gradeSelect" required="" aria-required="true"></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">班级：</label>
+					<div class="col-sm-5">
+						<select class="form-control m-t5" name="classSelect" id="classSelect" required="" aria-required="true">
+
+							<option value="">请选择班级....</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label">学籍号：</label>
+					<div class="col-sm-5">
+						<input id="xueji" type="text" class="form-control" name="xuejihao" required="" aria-required="true" placeholder="请输入学籍号">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">身份证号：</label>
+					<div class="col-sm-5">
+						<input id="idCard" type="text" name="idCard" class="form-control" name="IDCard" required="" aria-required="true" placeholder="请输入身份证号">
+
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">父亲手机号：</label>
+					<div class="col-sm-5">
+						<input id="phone1" name="phone1" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入父亲手机号">
+
+					</div>
+
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">母亲手机号：</label>
+					<div class="col-sm-5">
+						<input id="phone2" name="phone2" minlength="2" type="text" class="form-control" placeholder="请输入母亲手机号">
+
+					</div>
+
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">是否住校：</label>
+					<div class="col-sm-5">
+						<select class="form-control m-t5" name="zhuxiao" id="zhuxiao" required="" aria-required="true">
+							<option value="">请选择是否住校...</option>
+							<option value="1">是</option>
+							<option value="0">否</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group" id="room">
+					<label class="col-sm-3 control-label">宿舍楼名称：</label>
+					<div class="col-sm-5">
+						<select class="form-control m-t5" name="dormSelect" id="dormSelect" required="" aria-required="true">
+							<option value="">请选择宿舍...</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group" id="roomNumber">
+					<label class="col-sm-3 control-label">宿舍号：</label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" id="roomNum" name="roomNum" required="" aria-required="true">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">入校时间：</label>
+					<div class="col-sm-5">
+						<input id="time" name="time" minlength="2" type="text" class="laydate-icon form-control " required="" aria-required="true" placeholder="请选择入校时间">
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/treeview/bootstrap-treeview.js"></script>
+	<script src="../../../js/demo/treeview-demo.min.js"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../../../js/isIDCard.js"></script>
+	<script src="../../../js/script/config.js"></script>
+	<script>
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		var editorId = parent.editorId;
+		var nianjiId = "";
+		var banjiId = "";
+		var dormId = '';
+		var f_oldPhone='';//父亲手机号
+		var m_oldPhone='';//母亲手机号
+		//获取某个学生信息
+		function getPeronnalInfo() {
+			var load = parent.layer.load();
+
+			$.ajax({
+				type: "post",
+				url: http + "student/findOneStudent?id=" + editorId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+
+				success: function(data) {
+
+					if(data.success == false) {
+						layer.msg(data.msg);
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							console.log(data);
+							var name = data.obj.name;
+							var sex = data.obj.sex;
+							nianjiId = data.obj.gradeId;
+							banjiId = data.obj.classId;
+							var xuejihao = data.obj.studentNum;
+							var idNumber = data.obj.idNumber;
+							f_oldPhone = data.obj.fphone;
+							m_oldPhone = data.obj.mphone;
+							dormId = data.obj.dormId;
+							var isResidence = data.obj.isResidence;
+							var roomName = data.obj.roomName;
+							var time = data.obj.admissionTime;
+
+							$('#name').val(name);
+
+							$('#sex input').each(function() {
+								if(sex == $(this).val()) {
+									$(this).iCheck('check');
+								}
+							})
+							console.log(m_oldPhone)
+							$('#xueji').val(xuejihao);
+							$('#idCard').val(idNumber);
+							$('#phone1').val(f_oldPhone);
+							$('#phone2').val(m_oldPhone);
+							$('#time').val(time);
+							
+							$('#roomNum').val(roomName);
+							$('#zhuxiao option').each(function() {
+								if(isResidence == $(this).val()) {
+									getDorms();
+									$(this).attr('selected', true);
+									if($(this).val() == 0) {
+										$('#room').hide();
+										$('#roomNumber').hide();
+									}
+									if($(this).val() == 1) {
+										$('#room').show();
+										$('#roomNumber').show();
+									}
+								}
+							})
+
+							getGrade();
+						}
+					}
+					parent.layer.close(load);
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+
+			})
+
+		}
+		getPeronnalInfo();
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+			laydate({
+				elem: "#time",
+				event: "focus",
+				max: laydate.now()
+			});
+		});
+		//获取年级
+		function getGrade() {
+			$.ajax({
+				type: "post",
+				url: http + "grade/findAll",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				async: false,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var list = data.obj;
+							if(!jQuery.isEmptyObject(list)) {
+								$('#gradeSelect').html("");
+								var optionItem = "";
+								var optionItemNull = '<option value="">请选择年级...</option>';
+								for(var i = 0; i < list.length; i++) {
+									if(nianjiId == list[i].id) {
+										optionItem += '<option value="' + list[i].id + '" selected>' + list[i].name + '</option>';
+									} else {
+
+										optionItem += '<option value="' + list[i].id + '">' + list[i].name + '</option>';
+									}
+								}
+								$('#gradeSelect').append(optionItemNull)
+								$('#gradeSelect').append(optionItem)
+								getClass();
+							} else {
+								$('#gradeSelect').html("");
+								var optionItem = "";
+								optionItem += '<option>暂无年级</option>';
+								$('#gradeSelect').append(optionItem)
+							}
+						}
+					}
+				},
+				error: function(error) {
+					layer.msg("程序错误，请重试！");
+				}
+
+			})
+
+		}
+		$('#gradeSelect').change(function() {
+			nianjiId = $(this).val();
+			if(nianjiId != "") {
+				getClass();
+			} else {
+				$('#classSelect').html("");
+				var optionItemNull = '<option value="">请选择班级...</option>';
+				$('#classSelect').append(optionItemNull);
+			}
+
+		})
+		//获取班级
+		function getClass() {
+			$.ajax({
+				type: "post",
+				url: http + "class/findAllByGradeId?gradeId=" + nianjiId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				async: false,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var list = data.obj;
+							if(!jQuery.isEmptyObject(list)) {
+								$('#classSelect').html("");
+								var optionItem = "";
+								var optionItemNull = '<option value="">请选择班级...</option>';
+								for(var i = 0; i < list.length; i++) {
+
+									if(banjiId == list[i].id) {
+
+										optionItem += '<option value="' + list[i].id + '" selected>' + list[i].name + '</option>';
+									} else {
+										optionItem += '<option value="' + list[i].id + '">' + list[i].name + '</option>';
+
+									}
+								}
+								$('#classSelect').append(optionItemNull)
+								$('#classSelect').append(optionItem)
+
+							} else {
+								$('#classSelect').html("");
+								var optionItem = "";
+								optionItem += '<option value="">暂无班级</option>';
+								$('#classSelect').append(optionItem)
+							}
+						}
+					}
+				},
+				error: function(error) {
+					layer.msg("程序错误，请重试！");
+				}
+
+			})
+		}
+		$('#zhuxiao').change(function() {
+			if($(this).val() == 0) {
+				$('#room').hide();
+				$('#roomNumber').hide();
+			} else {
+				$('#room').show();
+				$('#roomNumber').show();
+			}
+		})
+		//获取宿舍
+		function getDorms() {
+			$.ajax({
+				type: "post",
+				url: http + "dormitory/findByDelFlag",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var list = data.obj;
+							if(!jQuery.isEmptyObject(list)) {
+								$('#dormSelect').html("");
+								var optionItem = "";
+								var optionItemNull = '<option value="" >请选择宿舍...</option>';
+								for(var i = 0; i < list.length; i++) {
+									if(dormId == list[i].id) {
+										optionItem += '<option value="' + list[i].id + '" selected>' + list[i].dormName + '</option>';
+									} else {
+										optionItem += '<option value="' + list[i].id + '">' + list[i].dormName + '</option>';
+									}
+								}
+								$('#dormSelect').append(optionItemNull)
+								$('#dormSelect').append(optionItem)
+
+							} else {
+								$('#dormSelect').html("");
+								optionItem += '<option>暂无宿舍</option>';
+								$('#dormSelect').append(optionItem)
+							}
+						}
+					}
+				},
+				error: function(error) {
+					layer.msg("程序错误，请重试！");
+				}
+
+			})
+		}
+		var m_sign = 0; //母亲手机号是否被注册
+		var f_sign = 0; //母亲手机号是否被注册
+		//验证父亲手机号是否注册
+		$('#phone1').blur(function() {
+			
+			var phone = $(this).val();
+			if(phone == "") {
+				layer.msg('请输入父亲手机号！');
+				return false;
+			}
+			if(phone ==f_oldPhone) {
+				return false;
+			}
+			$.ajax({
+				type: "post",
+				url: http + "student/checkRegister?phone=" + phone+'&oldphone='+f_oldPhone,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				async: false,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					//0，未被注册过，1 已注册 需要做合并操作  2 已注册，提示并清空输入框 3提示并清空输入框
+					if(data.value == 0) {
+						f_sign = 0;
+					} else if(data.value == 1) {
+						layer.alert('提示', {
+							icon: 2,
+							time: 0,
+							content: data.msg,
+							title: '添加提示',
+							btn: ['确定', '取消'],
+							yes: function(closeBtn, layero) {
+								f_sign = "1";
+								layer.close(closeBtn)
+							},
+							btn2: function(closeBtn, layero) {
+								f_sign = "0";
+								$('#phone1').val("");
+								layer.close(closeBtn);
+							}
+						});
+					} else if(data.value == 2 || data.value == 3) {
+						$('#phone1').val("");
+						layer.msg(data.msg);
+					}
+				},
+				error: function(error) {
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		});
+		//验证母亲手机号是否被注册
+		$('#phone2').blur(function() {
+			var phone = $(this).val();
+			if(phone == "") {
+				return false;
+			}
+			if(phone ==m_oldPhone) {
+				
+				return false;
+			}
+			$.ajax({
+				type: "post",
+				url: http + "student/checkRegister?phone=" + phone+'&oldphone='+m_oldPhone,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				async: false,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					//0，未被注册过，1 已注册 需要做合并操作  2 已注册，提示并清空输入框 3提示并清空输入框
+					if(data.value == 0) {
+						m_sign = 0;
+					} else if(data.value == 1) {
+						layer.alert('提示', {
+							icon: 2,
+							time: 0,
+							content: data.msg,
+							title: '添加提示',
+							btn: ['确定', '取消'],
+							yes: function(closeBtn, layero) {
+								m_sign = "1";
+								layer.close(closeBtn);
+							},
+							btn2: function(closeBtn, layero) {
+								m_sign = "0";
+								$('#phone2').val("");
+								layer.close(closeBtn);
+							}
+						});
+					} else if(data.value == 2 || data.value == 3) {
+						$('#phone2').val("");
+						layer.msg(data.msg);
+					}
+				},
+				error: function(error) {
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		});
+		// 身份证号码验证
+		jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+			return this.optional(element) || idCardNoUtil.checkIdCardNo(value);
+		}, "请正确输入您的身份证号码");
+		// 手机号码验证
+		jQuery.validator.addMethod("isMobile", function(value, element) {
+			var length = value.length;
+			var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+			return this.optional(element) || (length == 11 && mobile.test(value));
+		}, "请正确填写您的手机号码");
+		//编辑成员
+		function editorClassPersonnal() {
+			$.validator.setDefaults({
+				highlight: function(e) {
+					$(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+				},
+				success: function(e) {
+					e.closest(".form-group").removeClass("has-error").addClass("has-success")
+				},
+				errorElement: "span",
+				errorPlacement: function(e, r) {
+					e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+				},
+				errorClass: "help-block m-b-none",
+				validClass: "help-block m-b-none"
+			}), $().ready(function() {
+				$("#editorClassPersonnalForm").validate({
+					rules: {
+						idCard: {
+
+							isIdCardNo: true
+
+						},
+						phone1: {
+
+							isMobile: true
+
+						},
+						phone2: {
+
+							isMobile: true
+
+						}
+
+					},
+					messages: {
+
+						idCard: {
+
+							isIdCardNo: "请输入正确的身份证号"
+						},
+						phone1: {
+
+							isMobile: "请输入正确的手机号"
+
+						},
+						phone2: {
+							isMobile: "请输入正确的手机号"
+
+						}
+					}
+				})
+
+			});
+			if(!$("#editorClassPersonnalForm").valid()) {
+				return false;
+			}
+			var sex = "";
+			$("#sex input:radio[name='sex']").each(function() {
+				if($(this).is(':checked')) {
+					sex = $(this).val();
+
+				}
+			})
+			if(sex == undefined || sex == "") {
+				layer.msg('请选择性别');
+
+				return false;
+			}
+			var name = $('#name').val(); //姓名
+			var gradeId = $('#gradeSelect option:selected').val(); //年级
+			var classId = $('#classSelect option:selected').val(); //班级
+			var studentNum = $('#xueji').val(); //学号
+			var idNumber = $('#idCard').val(); //身份证号
+			var phone1 = $('#phone1').val(); //家长手机号1
+			var phone2 = $('#phone2').val(); //家长手机号2
+			var isResidence = $('#zhuxiao option:selected').val(); //是否住校
+			var admissionTime = $('#time ').val(); //入校时间
+			if(isResidence == 1) {
+				var dormId = $('#dormSelect option:selected').val(); //宿舍楼名称
+				var roomName = $('#roomNum ').val(); //宿舍号
+			} else {
+				var dormId = ""; //宿舍楼名称
+				var roomName = ""; //宿舍号
+			}
+			if(phone2 == phone1) {
+				layer.msg('手机号不能相同!')
+				return false;
+			}
+			var load = parent.layer.load(2);
+			$.ajax({
+				type: "post",
+				url: http + "student/update?id=" + editorId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify({
+					"gradeId": gradeId,
+					"classId": classId,
+					"name": name,
+					"idNumber": idNumber,
+					"studentNum": studentNum,
+					"isResidence": isResidence,
+					"sex": sex,
+					"dormId": dormId,
+					"roomName": roomName,
+					"admissionTime": admissionTime,
+					"phone": phone1,
+					"mphone": phone2,
+					"fSign": f_sign,
+					"mSign": m_sign
+				}),
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						var obj = data.obj;
+						if(!jQuery.isEmptyObject(obj)) {
+							layer.msg(obj.message);
+						}
+						return false;
+					}
+					if(data.success) {
+						var attributes = data.attributes;
+						if(attributes == null) {
+							layer.msg(data.msg);
+							parent.studentInfo();
+							parent.getGrade();
+							parent.layer.close(index);
+						} else {
+							layer.alert('提示', {
+								icon: 2,
+								time: 0,
+								content: attributes.errorMsg,
+								title: '添加提示',
+								btn: ['确定', '取消'],
+								yes: function(closeBtn, layero) {
+									layer.close(closeBtn);
+									parent.studentInfo();
+									parent.getGrade();
+									parent.layer.close(index);
+								},
+								btn2: function(closeBtn, layero) {
+									layer.close(closeBtn);
+									parent.studentInfo();
+									parent.getGrade();
+									parent.layer.close(index);
+								}
+							});
+						}
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+	</script>
+
+</html>

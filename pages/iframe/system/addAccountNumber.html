@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<p class="header_title" style="line-height: 40px;">账号信息</p>
+		<div class="ibox-content">
+			<form class="form-horizontal" novalidate="novalidate" id="addAccountForm">
+				<div class="form-group ">
+					<label class="col-sm-2  input_label" style="margin-top:10px;">账号名称：</label>
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<input id="name" name="name" minlength="2" type="text" class="form-control" required="" aria-required="true"placeholder="请输入账号名称">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label" style="margin-top:10px;">密码：</label>
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<input id="password" name="password" minlength="1" type="password" class="form-control" required="" aria-required="true" placeholder="请输入密码">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label" style="margin-top:10px;">确认密码：</label>
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<input id="confirmPwd" name="confirmPwd" minlength="1" type="password" class="form-control" required=""  equalTo="#password" placeholder="请确认密码">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label" style="margin-top:10px;">职位：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="job" id="job" required="" aria-required="true">
+							<option value="">请选择职位...</option>
+							<option value="houseparent">宿管</option>
+							<option value="guard">门卫</option>
+							<option value="mananger">系统管理员</option>
+							
+						</select>
+					</div>
+				</div>
+				<div class="form-group " id="manageWrap">
+					<label class="col-sm-2  input_label" style="margin-top:10px;">管理范围：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="manageSelect" id="manageSelect" required="" aria-required="true">
+							<option value="">请选择管理范围...</option>
+						</select>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/script/config.js"></script>
+
+	<script>
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		//选择的职位不同调用不同接口
+		var jobId=$('#job option:selected').val();
+		//宿舍
+		if(jobId=="houseparent"){
+			getdorm();
+		}
+		//门卫
+		if(jobId=="guard"){
+			getGate();
+		}
+		
+		$('#job').change(function(){
+			jobId=$(this).val();
+			if(jobId==""){
+				$('#manageWrap').show();
+				$('#manageSelect').html("");
+				var option1='<option value="">请选择管理范围...</option>';
+				$('#manageSelect').append(option1);
+			}
+			//宿管
+			if(jobId=="houseparent"){
+				$('#manageWrap').show();
+				getdorm();
+			}
+			//门卫
+			if(jobId=="guard"){
+				$('#manageWrap').show();
+				getGate();
+			}
+			//系统管理员
+			if(jobId=="mananger"){
+				$('#manageWrap').hide();
+			}
+		})
+		//获取校门
+		function getGate() {
+			$.ajax({
+				type: "post",
+				url: http + "gate/findAllSchoolGate",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						var list=data.obj;
+						if(!jQuery.isEmptyObject(list)) {
+							$('#manageSelect').html("");
+							var option="";
+							var option1='<option value="">请选择监控门...</option>';
+							for(var i=0;i<list.length;i++){
+								option+='<option value="'+list[i].id+'">'+list[i].gateName+'</option>';
+							}
+							$('#manageSelect').append(option1);
+							$('#manageSelect').append(option);
+						}else{
+							$('#manageSelect').html("");
+							option+='<option value="">暂无监控门</option>';
+							$('#manageSelect').append(option);
+						}
+					}
+				},
+				error: function(error) {
+					layer.msg("程序错误，请重试！");
+				}
+
+			})
+		}
+		//获取宿舍
+		function getdorm(){
+			var load=parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "dormitory/findByDelFlag",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						var list=data.obj;
+						if(!jQuery.isEmptyObject(list)) {
+							$('#manageSelect').html("");
+							var option="";
+							var option1='<option value="">请选择宿舍...</option>';
+							for(var i=0;i<list.length;i++){
+								option+='<option value="'+list[i].id+'">'+list[i].dormName+'</option>';
+							}
+							$('#manageSelect').append(option1);
+							$('#manageSelect').append(option);
+						}else{
+							$('#manageSelect').html("");
+							option+='<option value="">暂无宿舍门</option>';
+							$('#manageSelect').append(option);
+						}
+					}
+					parent.layer.close(load);
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+
+			})
+		}
+		function checkInput(){
+		}
+		//新增账号
+		function addAccountSubmit() {
+			$.validator.setDefaults({
+				highlight: function(e) {
+					$(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+				},
+				success: function(e) {
+					e.closest(".form-group").removeClass("has-error").addClass("has-success")
+				},
+				errorElement: "span",
+				errorPlacement: function(e, r) {
+					e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+				},
+				errorClass: "help-block m-b-none",
+				validClass: "help-block m-b-none"
+			}), $().ready(function() {
+				$("#addAccountForm").validate({
+					onfocusout: function(element){
+				        $(element).valid()
+				    },
+					rules: {
+
+						name: {
+							required: true,
+							minlength: 2
+						},
+						password: {
+							required: true,
+							minlength: 6
+						},
+						confirmPwd: {
+							required: true,
+							minlength: 6,
+							equalTo: "#password"
+						}
+
+					},
+					messages: {
+
+						name: {
+							required: "请输入账号名称",
+							minlength: "账号必须两个字符以上"
+						},
+						password: {
+							required: "请输入密码",
+							minlength: "密码必须六个字符以上"
+						},
+						confirmPwd: {
+							required: "请确认密码",
+							minlength: "密码必须六个字符以上",
+							equalTo:'密码不一致'
+						}
+
+					}
+				})
+
+			});
+			if(!$("#addAccountForm").valid()) {
+				return;
+			}
+			var name = $('#name').val();
+			var pwd = $('#password').val();
+			var classification=$('#job option:selected').val();
+			var mainId=$('#manageSelect option:selected').val();
+			var load=parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "account/addControlDoor",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify({
+					"userName": name,
+					"password": pwd,
+					"classification":classification,
+					"mainId":mainId
+				}),
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						var obj=data.obj;
+						if(!jQuery.isEmptyObject(obj)) {
+							layer.msg(obj.message)
+						}
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.allList();
+						parent.layer.close(index);
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		}
+	</script>
+
+</html>

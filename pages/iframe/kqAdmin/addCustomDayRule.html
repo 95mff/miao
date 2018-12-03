@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/student.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<form class="form-horizontal m-t " id="addDepartment" novalidate="novalidate">
+			<div class="width">
+				<span>规则名称：</span>
+				<input type="text" value="" data-type="title" class="p-l10 inputTitle" placeholder="请输入规则名称" />
+				<span class="input_msg">最多10个字符（中文或者英文）</span>
+			</div>
+			<p class="width80">设置一天内考勤次数</p>
+			<ul class="shangban_rule_list" id="addRule_list">
+				<li>
+					<div class="shangban shangbanTime time left"><span class="span spanNumber">第1次上课：</span><input type="text" data-type="shangbantime" id="startInput1" placeholder="00:00" value="08:00" name="time" /><select data-type="startshichang"></select><span class="span">分钟前开始打卡</span><div style="display: inline-block;" class="m-l8 ignore"><input type="checkbox" value="false" class="is_ignore"><span>是否忽略</span></div>
+					</div><div class="shangban xiabanTime time left m-rNone"><span>下课：</span><input type="text" data-type="xiabantime" id="endInput1" placeholder="00:00" value="12:00" name="time" /><select data-type="endshichang"></select><span class="span">分钟后结束打卡</span>
+						<div style="display: inline-block;" class="fangjia"><input type="checkbox" value="false" class="is_recess" /><span>放假</span></div>
+
+					</div><i class="fa fa-plus m-r20" onclick="addRule(this)"></i><i class="fa fa-minus" onclick="minusRule(this)"></i>
+
+				</li>
+			
+			</ul>
+			<div class="borderTop m-t15"></div>
+			<div class="width">
+				<span>旷工/旷课：迟到分钟数</span>
+				<input type="number" value="120" id="belateMaxNum" />
+				<span>（考勤时间段统计推送时间）</span>
+
+			</div>
+			<div class="borderTop m-t15"></div>
+			<p class="width80 ">特殊规则</p>
+			<ul class="shangban_rule_list" id="teshuRule_list" style="width: 85%;">
+				<li><input type="checkbox" value="0" name="teshu_rule" /><span>旷工/旷课：迟到分钟数</span><input type="text" value="11:00" class="teshu_startTime" id="teshuStartInput0" placeholder="00:00" /><span>--</span><input type="text" value="11:30" class="teshu_endTime" id="teshuEndInput0" placeholder="00:00" /><i class="fa fa-plus m-r20" onclick="addTeshuRule(this)"></i><i class="fa fa-minus" onclick="minusTeshuRule(this)"></i>
+				</li>
+
+			</ul>
+			</div>
+
+		</form>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/laydate/laydate.js"></script>
+
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		var num = "";
+		var teshuNum='';
+		var selectJson = [{
+				"name": "--",
+				value: "0"
+			},
+			{
+				"name": "10",
+				value: "10"
+			},
+			{
+				"name": "20",
+				value: "20"
+			},
+			{
+				"name": "30",
+				value: "30",
+				"selected": true
+			},
+			{
+				"name": "40",
+				value: "40"
+			},
+			{
+				"name": "50",
+				value: "50"
+			},
+			{
+				"name": "60",
+				value: "60"
+			},
+			{
+				"name": "70",
+				value: "70"
+			},
+			{
+				"name": "80",
+				value: "80"
+			},
+			{
+				"name": "90",
+				value: "90"
+			},
+			{
+				"name": "100",
+				value: "100"
+			},
+			{
+				"name": "110",
+				value: "110"
+			},
+			{
+				"name": "120",
+				value: "120"
+			},
+			{
+				"name": "180",
+				value: "180"
+			},
+			{
+				"name": "240",
+				value: "240"
+			},
+			{
+				"name": "300",
+				value: "300"
+			},
+			{
+				"name": "360",
+				value: "360"
+			},
+			{
+				"name": "420",
+				value: "420"
+			}
+		];
+		$(document).ready(function() {
+			$('#addRule_list li').each(function(i) {
+				num = i + 1;
+
+				$(this).find($('.spanNumber')).text('第' + num + '次上课：');
+			})
+
+			$('.shangbanTime select').html("");
+			$('.xiabanTime  select').html("");
+			var option = '';
+			for(var i = 0; i < selectJson.length; i++) {
+				if(selectJson[i].selected) {
+					option += '<option value="' + selectJson[i].value + '" selected>' + selectJson[i].name + '</option>'
+				} else {
+					option += '<option value="' + selectJson[i].value + '" >' + selectJson[i].name + '</option>'
+
+				}
+			}
+			$('.shangbanTime select').append(option);
+			$('.xiabanTime  select').append(option);
+			$('.shangbanTime select option').each(function() {
+				if($(this).val() == 30) {
+					$(this).attr('selected', true);
+				}
+			})
+			$('.xiabanTime select option').each(function() {
+				if($(this).val() == 30) {
+					$(this).attr('selected', true);
+				}
+			});
+			$('.shangbanTime input').each(function(i) {
+				var n = i + 1;
+				laydate.render({
+					elem: "#startInput" + n,
+					format: 'HH:mm',
+					type: 'time'
+
+				});
+			})
+			$('.xiabanTime input[name="time"]').each(function(j) {
+				var n = j + 1;
+				laydate.render({
+					elem: "#endInput" + n,
+					format: 'HH:mm',
+					type: 'time',
+				});
+			})
+			$('#teshuRule_list li').each(function(z) {
+				laydate.render({
+					elem: "#teshuStartInput0",
+					format: 'HH:mm',
+					type: 'time'
+
+				});
+				laydate.render({
+					elem: "#teshuEndInput0",
+					format: 'HH:mm',
+					type: 'time'
+
+				});
+			})
+
+		})
+		$('#addRule_list li').each(function() {
+
+			$(this).find('.fangjia').hide();
+			$('#addRule_list li .fangjia:last').show();
+			$(this).find('.ignore').hide();
+			$('#addRule_list li .ignore:first').show();
+		})
+		var departId = parent.id;
+		var departName = parent.name;
+		var sort = parent.sort;
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+
+		//添加规则
+		function addRule(elem) {
+			var addRuleItem = '';
+
+			addRuleItem += '<li>';
+			addRuleItem += '<div class="shangban shangbanTime time left">';
+			addRuleItem += '<span class="span spanNumber">第' + num + '次上课：</span>';
+			addRuleItem += '<input type="text" id="startInput' + num + '"  placeholder="00:00" value="13:30" name="time"/>';
+			addRuleItem += '<select data-type="startshichang">';
+
+			addRuleItem += '</select>';
+			addRuleItem += '<span class="span">分钟前开始打卡</span>';
+			addRuleItem += '<div style="display: inline-block;"  class="m-l8 ignore"><input type="checkbox" value="false" class="is_ignore"><span>是否忽略</span></div>';
+			
+			addRuleItem += '</div>';
+			addRuleItem += '<div class="shangban xiabanTime time left m-rNone" >';
+			addRuleItem += '<span >下课：</span>';
+			addRuleItem += '<input type="text" id="endInput' + num + '"  placeholder="00:00" value="17:30" name="time"/>';
+			addRuleItem += '<select data-type="endshichang">';
+
+			addRuleItem += '</select>';
+			addRuleItem += '<span class="span">分钟后结束打卡</span>';
+			addRuleItem += '<div style="display: inline-block;" class="fangjia"><input type="checkbox" value="false" class="is_recess" /><span >放假</span></div>';
+			addRuleItem += '</div>';
+			addRuleItem += '<i class="fa fa-plus m-r20" onclick="addRule(this)"></i>';
+			addRuleItem += '<i class="fa fa-minus" onclick="minusRule(this)"></i>';
+			addRuleItem += '</li>';
+			$('#addRule_list').append(addRuleItem);
+			$('#addRule_list li').each(function(i) {
+				num = i + 1;
+				$(this).find($('.spanNumber')).text('第' + num + '次上课：');
+				$(this).find($('.shangbanTime input[name="time"]')).attr('id', 'startInput' + num);
+				$(this).find($('.xiabanTime input[name="time"]')).attr('id', 'endInput' + num);
+				$(this).find('.fangjia').hide();
+				$(this).find('.ignore').hide();
+				$(this).find($('.xiabanTime')).css({
+					"marginLeft":73+'px'
+				});
+				$(this).find($('.xiabanTime:first')).css({
+					"marginLeft":0+'px'
+				});
+				$('#addRule_list li .fangjia:last').show();
+				$('#addRule_list li .ignore:first').show();
+				$('#addRule_list li .fangjia input').attr('checked', false);
+				
+
+			})
+
+			var option = '';
+			for(var i = 0; i < selectJson.length; i++) {
+				if(selectJson[i].selected) {
+					option += '<option value="' + selectJson[i].value + '" selected>' + selectJson[i].name + '</option>';
+				} else {
+					option += '<option value="' + selectJson[i].value + '" >' + selectJson[i].name + '</option>';
+
+				}
+			}
+			$('#addRule_list li').eq(num - 1).find($('.shangbanTime  select')).append(option);
+			$('#addRule_list li').eq(num - 1).find($('.xiabanTime  select')).append(option);
+			$('.shangbanTime input').each(function(i) {
+				laydate.render({
+					elem: "#startInput" + num,
+					format: 'HH:mm',
+					type: 'time'
+				});
+			})
+			$('.xiabanTime input').each(function(j) {
+				laydate.render({
+					elem: "#endInput" + num,
+					format: 'HH:mm',
+					type: 'time'
+				});
+			})
+
+		}
+		//删除规则
+		function minusRule(elem) {
+			if($('#addRule_list li').length != 1) {
+				$(elem).parent('li').remove();
+				$('#addRule_list li').each(function(i) {
+					num = i + 1;
+					$(this).find($('.spanNumber')).text('第' + num + '次上课：');
+					$(this).find($('.shangbanTime input')).attr('id', 'startInput' + num);
+					$(this).find($('.xiabanTime input[name="time"]')).attr('id', 'endInput' + num);
+					$(this).find('.fangjia').hide();
+					$('#addRule_list li .fangjia:last').show();
+					$(this).find('.ignore').hide();
+					$('#addRule_list li .ignore:first').show();
+						$(this).find($('.xiabanTime')).css({
+							"marginLeft":73+'px'
+						});
+						$(this).find($('.xiabanTime:first')).css({
+							"marginLeft":0+'px'
+						});
+					$('#addRule_list li .fangjia input').attr('checked', false);
+
+				})
+			} else {
+				layer.msg('至少要有一条规则！');
+				$('#addRule_list li .fangjia:last').show();
+			}
+		}
+		//特殊规则增加
+		var teshuNumber = '';
+		function addTeshuRule(elem) {
+			teshuNumber = $('#teshuRule_list li').length;
+			var addTeshuRuleItem = '';
+			addTeshuRuleItem += '<li>';
+			addTeshuRuleItem += '<input type="checkbox" value="0" name="teshu_rule"/>';
+			addTeshuRuleItem += '<span>旷工/旷课：迟到分钟数</span>';
+			addTeshuRuleItem += '<input type="text" value="12:00" class="teshu_startTime" name="time" id="teshuStartInput' + teshuNumber + '"  placeholder="00:00"/>';
+			addTeshuRuleItem += '<span>--</span>';
+			addTeshuRuleItem += '<input type="text" value="13:00" class="teshu_endTime" name="time" id="teshuEndInput' + teshuNumber + '"  placeholder="00:00"/>';
+			addTeshuRuleItem += '<i class="fa fa-plus m-r20" onclick="addTeshuRule(this)"></i>';
+			addTeshuRuleItem += '<i class="fa fa-minus" onclick="minusTeshuRule(this)"></i>';
+			addTeshuRuleItem += '</li>';
+			$('#teshuRule_list').append(addTeshuRuleItem);
+			$('#teshuRule_list li').each(function(z) {
+				teshuNum=z+1;
+				$(this).find($('.teshu_startTime')).attr('id', 'teshuStartInput' + teshuNum);
+				$(this).find($('.teshu_endTime')).attr('id', 'teshuEndInput' + teshuNum);
+				laydate.render({
+					elem: "#teshuStartInput" + teshuNum,
+					format: 'HH:mm',
+					type: 'time'
+
+				});
+				laydate.render({
+					elem: "#teshuEndInput" + teshuNum,
+					format: 'HH:mm',
+					type: 'time'
+
+				});
+			})
+		}
+		//删除特殊规则
+		function minusTeshuRule(elem) {
+			if($('#teshuRule_list li').length != 1) {
+				$(elem).parent('li').remove();
+				$('#teshuRule_list li').each(function(i) {
+					teshuNum=i+1;
+					$(this).find($('.teshu_startTime')).attr('id', 'teshuStartInput' + teshuNum);
+					$(this).find($('.teshu_endTime')).attr('id', 'teshuEndInput' + teshuNum);
+				})
+			}else {
+				layer.msg('至少要有一条特殊规则！');
+			}
+		}
+		//提交日规则
+		function tijiao() {
+			
+			var tehuTimeFlag = [];
+			var title = $('.inputTitle').val();
+			var belateMaxNum = $('#belateMaxNum').val();
+			if(title == "") {
+				layer.msg('请填写日规则名称！');
+				return false;
+			}
+
+			var ruleContent = [];
+			var rule = {};
+			var sketch = "";
+			var sketchs = "";
+			var str = "";
+			$("#addRule_list li").each(function() {
+
+				var shangban = $(this).find('.shangbanTime input').val();
+				var xiaban = $(this).find('.xiabanTime input').val();
+				
+				str = shangban + '--' + xiaban;
+
+				sketchs += str + "，";
+
+				sketch = sketchs.substring(0, sketchs.length - 1);
+
+				var rulesDetail = [];
+				rule['rulesDetail'] = rulesDetail;
+
+				$("#addRule_list li .time").each(function() {
+
+					var rulesDetailItem = {};
+					var starttime = $(this).find('input').val();
+					var shichang = $(this).find('select option:checked').val();
+					rulesDetailItem["attendanceTime"] = starttime;
+					if($(this).hasClass('shangbanTime')) {
+						rulesDetailItem["accessState"] = 1;
+					}
+					if($(this).hasClass('xiabanTime')) {
+						rulesDetailItem["accessState"] = 2;
+					}
+					rulesDetailItem["gap"] = shichang;
+					rulesDetail.push(rulesDetailItem);
+					var is_recess = $(this).find(".fangjia input[type='checkbox']:last").is(":checked");
+					var is_valida = $(this).find(".ignore input[type='checkbox']:first").is(":checked");
+					if(is_recess) {
+						rulesDetailItem['is_recess'] = 1;
+					} else {
+						rulesDetailItem['is_recess'] = 0;
+
+					}
+					if(is_valida) {
+						rulesDetailItem['is_valida'] = 1;
+					} else {
+						rulesDetailItem['is_valida'] = 0;
+
+					}
+				});
+
+			});
+
+			var exemptList = [];
+			rule['exemptList'] = exemptList;
+			$('#teshuRule_list li').each(function() {
+				var exemptListItem = {};
+				var checked = $(this).find("input[type='checkbox']").is(":checked");
+				if(checked) {
+					exemptListItem['isExempt'] = 1;
+				} else {
+					exemptListItem['isExempt'] = 0;
+
+				}
+				var exemptBeginTime = $(this).find(".teshu_startTime").val();
+				var exemptEndTime = $(this).find(".teshu_endTime").val();
+
+				exemptListItem['exemptBeginTime'] = exemptBeginTime;
+				exemptListItem['exemptEndTime'] = exemptEndTime;
+				exemptList.push(exemptListItem);
+
+				if(exemptBeginTime == "" && exemptEndTime == "") {
+					tehuTimeFlag.push({
+						"exemptBeginTimeFlag": true,
+						"exemptEndTimeFlag": true
+					});
+				}
+				if(exemptBeginTime != "" && exemptEndTime != "") {
+					tehuTimeFlag.push({
+						"exemptBeginTimeFlag": false,
+						"exemptEndTimeFlag": false
+					});
+				}
+				if(exemptBeginTime == "" && exemptEndTime != "") {
+					tehuTimeFlag.push({
+						"exemptBeginTimeFlag": true,
+						"exemptEndTimeFlag": false
+					});
+				}
+				if(exemptBeginTime != "" && exemptEndTime == "") {
+					tehuTimeFlag.push({
+						"exemptBeginTimeFlag": false,
+						"exemptEndTimeFlag": true
+					});
+				}
+			})
+			rule["rulesName"] = title;
+			rule["sketch"] = sketch;
+			rule['belateMaxNum'] = belateMaxNum;
+
+
+			//判断迟到分钟数不能为空
+			if(belateMaxNum == "") {
+				layer.msg("旷工/旷课：迟到分钟数不能为空!");
+				return false;
+			}
+			//判断特殊规则不能为空
+			for(var i = 0; i < tehuTimeFlag.length; i++) {
+				var orderNumber = i + 1;
+				if(tehuTimeFlag[i].exemptBeginTimeFlag) {
+					layer.msg("第" + orderNumber + "条特殊规则开始时间不能为空");
+					return false;
+				}
+				if(tehuTimeFlag[i].exemptEndTimeFlag) {
+					layer.msg("第" + orderNumber + "条特殊规则结束时间不能为空");
+					return false;
+				}
+			}
+
+		
+			//先  判断是否忽略   是否选中
+			ruleContent.push(rule);
+			for(var i=0;i<ruleContent.length;i++){
+				var details=ruleContent[i].rulesDetail;
+				if(details[0].is_valida==1){
+					var endAttendanceTime=makeDurationToSeconds(details[1].attendanceTime);
+					var gapTime=makeDurationToSeconds2(details[1].gap);
+					var resultTime=endAttendanceTime-gapTime;
+					details[0].attendanceTime=makeDurationToH(resultTime);
+					$("#addRule_list li:first .shangbanTime input[name='time']").val(makeDurationToH(resultTime));
+					var str='';
+					var sketch='';
+					var sketchs='';
+					$("#addRule_list li").each(function() {
+						var shangban = $(this).find('.shangbanTime input').val();
+						var xiaban = $(this).find('.xiabanTime input').val();
+						str = shangban + '--' + xiaban;
+						sketchs += str + "，";
+					});
+					sketch = sketchs.substring(0, sketchs.length - 1);
+					ruleContent[i].sketch=sketch;
+				}
+					
+			}
+			console.log(ruleContent);
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "dayattendancerules/addUserDefined",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify(ruleContent[0]),
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data);
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.dayRuleList();
+						parent.layer.close(index);
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+	</script>
+
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<p class="header_title" style="line-height: 40px;">屏幕信息</p>
+		<div class="ibox-content">
+			<form class="form-horizontal" novalidate="novalidate" id="editorScreenForm">
+				<div class="form-group ">
+					<label class="col-sm-2  input_label" style="margin-top:10px;">大屏名称：</label>
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<input id="name" name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入大屏名称">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label" style="margin-top:10px;">大屏别称：</label>
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<input id="screenNickName" name="screenNickName" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入大屏别称">
+					</div>
+				</div>
+
+				<div class="form-group ">
+					<label class="col-sm-2  input_label" style="margin-top:10px;">所属监控门：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="account" id="manageSelect" required="" aria-required="true"></select>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/script/config.js"></script>
+
+	<script>
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		var editorScreenId = parent.editorScreenId;
+		var jiankongId = "";
+		//获取详情
+		function screenDetails() {
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "screen/findOneScreen?id=" + editorScreenId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				async: false,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data)
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var name = data.obj.screenName;
+							var screenNickName = data.obj.screenNickName;
+							jiankongId = data.obj.gateId;
+							$('#name').val(name);
+							$('#screenNickName').val(screenNickName);
+							getGate();
+						}
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+
+			})
+		}
+		screenDetails();
+		//获取监控门
+		function getGate() {
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "gate/findAllGate",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var list = data.obj;
+							if(!jQuery.isEmptyObject(list)) {
+								$('#manageSelect').html("");
+								var option = "";
+								var optionNull = '<option value="">请选择监控门...</option>';
+								for(var i = 0; i < list.length; i++) {
+									option += '<option value="' + list[i].id + '">' + list[i].gateName + '</option>';
+								}
+								$('#manageSelect').append(optionNull);
+								$('#manageSelect').append(option);
+								$('#manageSelect option').each(function() {
+									if(jiankongId == $(this).val()) {
+										$(this).attr('selected', true);
+									}
+								})
+							} else {
+								$('#manageSelect').html("");
+								option = '<option value="">暂无监控门</option>';
+								$('#manageSelect').append(option);
+
+							}
+						}
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+
+			})
+		}
+
+		//编辑大屏
+		function editorScreenSubmit() {
+			$.validator.setDefaults({
+				highlight: function(e) {
+					$(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+				},
+				success: function(e) {
+					e.closest(".form-group").removeClass("has-error").addClass("has-success")
+				},
+				errorElement: "span",
+				errorPlacement: function(e, r) {
+					e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+				},
+				errorClass: "help-block m-b-none",
+				validClass: "help-block m-b-none"
+			}), $().ready(function() {
+				$("#editorScreenForm").validate({
+					rules: {
+
+						name: {
+							required: true,
+							minlength: 2
+						},
+						screenNickName: {
+							required: true,
+							minlength: 2
+						}
+
+					},
+					messages: {
+
+						name: {
+							required: "请输入大屏名称",
+							minlength: "大屏名称必须两个字符以上"
+						},
+						screenNickName: {
+							required: "请输入大屏别称",
+							minlength: "大屏别称必须两个字符以上"
+						}
+
+					}
+				})
+
+			});
+			if(!$("#editorScreenForm").valid()) {
+				return;
+			}
+			var name = $('#name').val();
+			var screenNickName = $('#screenNickName').val();
+			var gateId = $('#manageSelect option:selected').val();
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "screen/updateScreen?id=" + editorScreenId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify({
+					"screenName": name,
+					"screenNickName": screenNickName,
+					"gateId": gateId
+
+				}),
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						var obj = data.obj;
+						if(!jQuery.isEmptyObject(obj)) {
+							layer.msg(obj.message);
+						}
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						//调用父级获取大屏列表
+						parent.allScreen();
+						parent.layer.close(index);
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		}
+	</script>
+
+</html>

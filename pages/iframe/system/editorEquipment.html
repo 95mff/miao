@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<p class="header_title" style="line-height: 40px;">设备信息</p>
+		<div class="ibox-content">
+			<form class="form-horizontal" novalidate="novalidate" id="editorEquipmentForm">
+				<div class="form-group">
+					<label class="col-sm-2  input_label">摄像头名称：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<input id="name" name="name" minlength="2" type="text" class="form-control" required="" aria-required="true" placeholder="请输入摄像头名称">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label m-t5">方向：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="fangxiang" id="fangxiang" required="" aria-required="true">
+							<option value="">请选择方向...</option>
+							<option value="1">进</option>
+							<option value="2">出</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label m-t5">位置：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="gate" id="gate" required="" aria-required="true">
+
+						</select>
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2  input_label m-t5">所属大屏：</label>
+					<div class="col-sm-6 col-md-2 col-lg-2">
+						<select class="form-control m-t5" name="screen" id="screen" required="" aria-required="true">
+
+						</select>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../../../js/isIDCard.js"></script>
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+	<script>
+		var editorId = parent.editorId;
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		var mainId = ""; //位置id(校门id)
+		var screenId = ""; //大屏id
+		//获取设备详情
+		function getEquipmentDetails() {
+			var load = parent.layer.load();
+
+			$.ajax({
+				type: "post",
+				url: http + "equipment/findOne?id=" + editorId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				async: false,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							console.log(data);
+							var name = data.obj.equipmentName;
+							var equipmentShotState = data.obj.equipmentShotState;
+							mainId = data.obj.mainId;
+							screenId = data.obj.screenId;
+
+							$('#name').val(name);
+							$('#fangxiang option').each(function() {
+								if($(this).val() == equipmentShotState) {
+									$(this).attr('selected', "selected");
+								}
+							})
+							getGate();
+							getScreen();
+						}
+					}
+
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+		getEquipmentDetails();
+		//获取位置(校门)
+		function getGate() {
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "gate/findAllGate",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							var selectlist = data.obj;
+							$('#gate').html("");
+							var option = '';
+							var optionNull = '<option value="">请选择监控门...</option>';
+							for(var i = 0; i < selectlist.length; i++) {
+								option += '<option value="' + selectlist[i].id + '">' + selectlist[i].gateName + '</option>'
+							}
+							$('#gate').append(optionNull);
+							$('#gate').append(option);
+							$('#gate option').each(function() {
+
+								if($(this).val() == mainId) {
+									$(this).attr('selected', "selected");
+								}
+							})
+
+						}
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+
+		//获取大屏
+		function getScreen() {
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "screen/findAllScreenList",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						return false;
+					}
+					if(data.success) {
+						userToken(data.restCode, data.msg);
+						if(data.restCode == 200) {
+							console.log(data);
+							var selectlist = data.obj;
+							$('#screen').html("");
+							var optionNull = '<option value="">请选择大屏...</option>';
+							var option = '';
+							for(var i = 0; i < selectlist.length; i++) {
+								option += '<option value="' + selectlist[i].id + '">' + selectlist[i].screenName + '</option>'
+							}
+							$('#screen').append(optionNull);
+							$('#screen').append(option);
+							$('#screen option').each(function() {
+								if($(this).val() == screenId) {
+									$(this).attr('selected', "selected");
+								}
+							})
+
+						}
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+
+		//编辑设备信息
+		function editorEquipmentSubmit() {
+			$.validator.setDefaults({
+				highlight: function(e) {
+					$(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+				},
+				success: function(e) {
+					e.closest(".form-group").removeClass("has-error").addClass("has-success")
+				},
+				errorElement: "span",
+
+				errorClass: "help-block m-b-none",
+				validClass: "help-block m-b-none"
+			});
+			if(!$("#editorEquipmentForm").valid()) {
+				return;
+			}
+			var equipmentName = $('#name').val(); //设备名称
+			var equipmentShotState = $('#fangxiang option:selected').val(); //方向
+			var mainId = $('#gate option:selected').val(); //位置（校门）
+			var screenId = $('#screen option:selected').val(); //大屏
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "equipment/update?id=" + editorId,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify({
+					"equipmentName": equipmentName,
+					"equipmentShotState": equipmentShotState,
+					"mainId": mainId,
+					"screenId": screenId,
+				}),
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						var obj = data.obj;
+						if(!jQuery.isEmptyObject(obj)) {
+							layer.msg(obj.message);
+						}
+						return false;
+					}
+					if(data.success == true) {
+
+						parent.allEquipment();
+						parent.layer.close(index);
+					}
+
+				},
+				error: function(error) {
+					lparent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+		}
+	</script>
+
+</html>

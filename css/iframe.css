@@ -1,0 +1,39 @@
+.header_title{
+	width: 100%;
+	height: 40px;
+	
+	line-height: 50px;
+	background: #F2F2F2;
+	color: #333;
+	font-size:14px;
+	padding-left:20px;
+}
+.ibox-content{
+	border: 0 none;
+}
+.tree_header_left_add{
+	display: block;
+	border: 0 none;
+}
+.layer-date{
+	max-width: auto !important;
+}
+.input_label{
+	text-align: right;
+	font-weight: normal;
+}
+.img_list li{
+	height: auto;
+}
+.img_list li .wrong{
+	top:-10px;
+}
+.img_list{
+	margin-top:20px;
+}
+.textCenter{
+	text-align: center;margin-bottom: 10px;
+}
+.labelCSS{
+	margin-left:10px;width: 40%;text-align: left;font-weight: normal;
+}

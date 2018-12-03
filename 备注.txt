@@ -1,0 +1,5 @@
+登录界面：https://lanhuapp.com/url/OIxPH（蓝湖）
+https://apizza.net/console/project/db7e5b0ac44b236cb73a614e1bd5be18/dev(接口)
+
+编辑日规则：
+放假input未置空

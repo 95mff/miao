@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<form id="form">
+			<input type="text" name="name" /><br />
+			<input type="password" name="pwd" /><br />
+			<input type="radio" name="sex" value="0" />男<br />
+			<input type="radio" name="sex" value="1" />女<br />
+			<select name="department">
+				<option value="1">高一教务处</option>
+				<option value="12">高二教务处</option>
+				<option value="13">高三教务处</option>
+				<option value="14">高四教务处</option>
+			</select>
+		</form>
+		<button onclick="submit()">提交</button>
+		<input id="test" type="text" />
+	</body>
+	<script src="js/jquery.min.js"></script>
+
+	<script src="js/script/config.js"></script>
+	<script>
+		$('#test').keypress(function(e){
+			console.log($(this).val())
+		    if(e.keyCode >= 48 && e.keyCode <= 57){
+		        e.originalEvent.returnValue = false
+		    }
+		});
+		function getFormData(form) {
+			var unindexed_array = $(form).serializeArray();
+			var indexed_array = {};
+
+			$.map(unindexed_array, function(n, i) {
+				console.log(n)
+				console.log(i)
+				indexed_array[n['name']] = n['value'];
+			});
+
+			return indexed_array;
+		}
+
+		function submit() {
+			//console.log(JSON.stringify(getFormData('#form')))
+			console.log(getFormData('#form'));
+		}
+		var token = sessionStorage.getItem("user_token");
+		var http = "http://192.168.1.175:8091/";
+		//封装ajax
+		function ajax(type, url, async, data, success, error) {
+			$.ajax({
+				type: type,
+				url: http + url,
+				//url: 'http://zhangpeng.s1.natapp.cc' + url,
+				async: async, // 使用同步方式
+				// 1 需要使用JSON.stringify 否则格式为 a=2&b=3&now=14...
+				// 2 需要强制类型转换，否则格式为 {"a":"2","b":"3"}
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify(data),
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				success: function(returnData) {
+
+					if(returnData.success) {
+						if(returnData.restCode == 200) {
+							success(returnData);
+						}
+					} else {
+						console.log(returnData.msg);
+
+					}
+				}, // 注意不要在此行增加逗号
+				error: function(e) {
+					error(e);
+				}
+			});
+		}
+		//调用ajax
+		$(function() {
+			function a() {
+				ajax("post", "visit/findVisitByCondition", false,
+
+					{
+						"visitType": "0",
+						"findStartTime": "",
+						"findEndTime": "",
+						"pageSize": "10",
+						"pageNumber": "1",
+						"comment": ""
+					},
+					function(data) {
+						console.log(data);
+					},
+					function(e) {
+						console.log(e)
+						console.log('11');
+					}
+				)
+			}
+			a();
+
+		})
+		
+		
+	</script>
+
+</html>

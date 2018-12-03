@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<div class="tree_header_left_add">
+			<p class="tree_header_left_add_title">
+				<span>温馨提醒</span>
+
+			</p>
+			<p class="m-l10">1.导入会覆盖原有员工的信息，如需更新已存在的员工，请先导出通讯录，在导出表格里进行修改</p>
+			<p class="m-l10">2.子帐号仅能上传和导出有权限范围内的通讯录信息。</p>
+			<ul class="nav nav-tabs">
+
+				<li class="active">
+					<a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> 新建导入</a>
+				</li>
+				<li class="">
+					<a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> 导出修改</a>
+				</li>
+			</ul>
+			<div class="tab_content">
+				<div id="vertical-timeline" class="vertical-container light-timeline tabcontent_div show">
+					<div class="vertical-timeline-block">
+						<div class="vertical-timeline-icon navy-bg lineHeight">1</div>
+
+						<div class="vertical-timeline-content">
+							<h2>下载模板</h2>
+							<p>下载员工通讯录记录模板，批量填写员工信息。
+								<a href="#" class="btn btn-sm btn-primary" onclick="xiazai()">点击下载</a>
+							</p>
+
+						</div>
+					</div>
+
+					<div class="vertical-timeline-block">
+						<div class="vertical-timeline-icon blue-bg lineHeight">2</div>
+
+						<div class="vertical-timeline-content">
+							<h2>新增导入</h2>
+							<p>导入填写好的员工信息表
+								<a class="btn btn-sm btn-success relative"> 新增导入
+									<input type="file" class="filhide_btn " onchange="fileChange1(this)" id="addFile" />
+								</a>
+							</p>
+							<span style="float: right;line-height: 28px;" id="addFileValue"></span>
+						</div>
+					</div>
+					<!--<button class="fileBtn">上传</button>-->
+				</div>
+				<div id="vertical-timeline" class="vertical-container light-timeline tabcontent_div">
+					<div class="vertical-timeline-block">
+						<div class="vertical-timeline-icon navy-bg lineHeight">1</div>
+
+						<div class="vertical-timeline-content">
+							<h2>导出</h2>
+							<p>导出所有员工信息，批量修改员工信息
+								<a href="#" class="btn btn-sm btn-primary" onclick="exportExcel()">点击导出</a>
+							</p>
+
+						</div>
+					</div>
+
+					<div class="vertical-timeline-block">
+						<div class="vertical-timeline-icon blue-bg lineHeight">2</div>
+
+						<div class="vertical-timeline-content">
+							<h2>上传</h2>
+							<p>上传修改好的员工信息表
+
+								<a class="btn btn-sm btn-success relative"> 修改导入
+
+									<input type="file" class="filhide_btn " onchange="fileChange2(this)" id="editorFile" />
+								</a>
+
+							</p>
+							<span style="float: right;line-height: 28px;" id="editorFileValue"></span>
+						</div>
+					</div>
+					<!--<button class="fileBtn">上传2</button>-->
+				</div>
+			</div>
+
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		var token = sessionStorage.getItem("user_token");
+		var departmentId = parent.id; //部门id
+		var index = parent.layer.getFrameIndex(window.name);
+		//tab切换  导入下载文件
+		var tabIndex = 0;
+		$('.nav-tabs li').click(function() {
+			tabIndex = $(this).index();
+			$('.tab_content').find('.tabcontent_div').eq(tabIndex).addClass('show').siblings().removeClass('show');
+		});
+		//下载员工excel模板
+		function xiazai() {
+			window.open(http + "employee/downLoadEmployeeExcelTemplate");
+		}
+		//导出员工excel
+		function exportExcel() {
+			if(parent.$("#pagination").is(":hidden")){
+				layer.msg('此部门下没有人员，请先添加人员再进行下载！')
+			}else{
+				window.open(http + "employee/exportEmpolyeeToExcel?departmentId=" + departmentId);
+			}
+		}
+
+		function fileChange1(target) {
+			var name = target.value;
+			var fileName = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+			if(fileName != "xls" && fileName != "xlsx") {
+				
+				layer.msg("请选择execl格式文件");
+				target.value = "";
+				$("#addFileValue").text("请重新上传！");
+				return false;
+			} else {
+				$("#addFileValue").text(name);
+			}
+		}
+
+		function fileChange2(target) {
+			var name = target.value;
+			var fileName = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+			if(fileName != "xls" && fileName != "xlsx") {
+				
+				layer.msg("请选择execl格式文件");
+				target.value = "";
+				$("#editorFileValue").text("请重新上传！");
+				return false;
+			} else {
+				$("#editorFileValue").text(name);
+			}
+		}
+
+		//新增导入
+		var addList = "";
+		function addImport() {
+			var formData = new FormData();
+			var fileElem = $('#addFile')[0];
+			formData.append('file', fileElem.files[0]);
+			if(fileElem.files[0] == undefined) {
+				layer.msg("请选择文件！");
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "employee/importEmployeeByExcel?departmentId=" + departmentId,
+				processData: false,
+				contentType: false,
+				data: formData,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						$("#addFileValue").text("请重新上传！");
+						$("#addFile").val("");
+					}
+					if(data.success) {
+						addList = data.obj;
+						if(!jQuery.isEmptyObject(addList)) {
+							layer.open({
+								title: '未导入人员',
+								type: 2,
+								area: ['600px', '450px'],
+								fixed: false, //不固定
+								maxmin: true,
+								content: 'errorMsg.html'
+							});
+							$('#addFileValue').text("请修改后重新上传！");
+							$("#addFile").val("");
+							parent.searchStaff();
+						} else {
+							parent.searchStaff();
+							layer.msg(data.msg);
+							parent.layer.close(index);
+						}
+
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		}
+		//修改导入
+		var editorList = "";
+		function editorImport() {
+			var formData = new FormData();
+			var fileElem = $('#editorFile')[0];
+			formData.append('file', fileElem.files[0]);
+			if(fileElem.files[0] == undefined) {
+				layer.msg("请选择文件！");
+				return false;
+			}
+			var load = parent.layer.load(0);
+			$.ajax({
+				type: "post",
+				url: http + "employee/importUpdateEmployeeByExcel?departmentId=" + departmentId,
+				processData: false,
+				contentType: false,
+				data: formData,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						var obj=data.obj;
+						if(!jQuery.isEmptyObject(obj)) {
+							layer.msg(obj.message);
+						}
+						$("#addFileValue").text("请重新上传！");
+						$("#addFile").val("");
+					}
+					if(data.success) {
+						
+						editorList = data.obj;
+						if(!jQuery.isEmptyObject(editorList)) {
+							
+							layer.open({
+								title: '未导入人员',
+								type: 2,
+								area: ['600px', '450px'],
+								fixed: false, //不固定
+								maxmin: true,
+								content: 'errorMsg.html'
+							});
+							$('#editorFileValue').text("请修改后重新上传！");
+							$('#editorFile').val("");
+						} else {
+							parent.searchStaff();
+							layer.msg(data.msg);
+							parent.layer.close(index);
+						}
+
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		}
+	</script>
+
+</html>

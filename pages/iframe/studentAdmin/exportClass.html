@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<div class="tree_header_left_add">
+			<p class="tree_header_left_add_title">
+				<span>温馨提醒</span>
+
+			</p>
+			<p class="m-l10">1.新增导入会覆盖原有学生的信息，如需更新已存在的学生，请先导出excel，在导出表格里进行修改</p>
+			<p class="m-l10">2.若导入的表格中信息错误，则进行提示，请重新修改导入。否则，导入不成功。</p>
+			<ul class="nav nav-tabs">
+
+				<li class="active">
+					<a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> 新建导入</a>
+				</li>
+				<li class="">
+					<a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> 导出修改</a>
+				</li>
+			</ul>
+			<div class="tab_content">
+				<div id="vertical-timeline" class="vertical-container light-timeline tabcontent_div show">
+					<div class="vertical-timeline-block">
+						<div class="vertical-timeline-icon navy-bg lineHeight">1</div>
+
+						<div class="vertical-timeline-content">
+							<h2>下载模板</h2>
+							<p>下载学生通讯录记录模板，批量填写学生信息。
+								<a href="#" class="btn btn-sm btn-primary" onclick="xiazai()">点击下载</a>
+							</p>
+
+						</div>
+					</div>
+
+					<div class="vertical-timeline-block">
+						<div class="vertical-timeline-icon blue-bg lineHeight">2</div>
+
+						<div class="vertical-timeline-content">
+							<h2>新增导入</h2>
+							<p>导入填写好的学生信息表
+								<a class="btn btn-sm btn-success relative"> 新增导入
+									<input type="file" class="filhide_btn " onchange="classfileChange1(this)" id="addFile" />
+								</a>
+							</p>
+							<span style="float: right;line-height: 28px;" id="addFileValue"></span>
+						</div>
+					</div>
+					<!--<button class="fileBtn">上传</button>-->
+				</div>
+				<div id="vertical-timeline" class="vertical-container light-timeline tabcontent_div">
+					<div class="vertical-timeline-block">
+						<div class="vertical-timeline-icon navy-bg lineHeight">1</div>
+
+						<div class="vertical-timeline-content">
+							<h2>导出</h2>
+							<p>导出所有学生信息，批量修改学生信息
+								<a href="#" class="btn btn-sm btn-primary" onclick="exportExcel()">点击导出</a>
+							</p>
+
+						</div>
+					</div>
+
+					<div class="vertical-timeline-block">
+						<div class="vertical-timeline-icon blue-bg lineHeight">2</div>
+
+						<div class="vertical-timeline-content">
+							<h2>上传</h2>
+							<p>上传修改好的学生信息表
+
+								<a class="btn btn-sm btn-success relative"> 修改导入
+
+									<input type="file" class="filhide_btn " onchange="classfileChange2(this)" id="editorFile" />
+								</a>
+
+							</p>
+							<span style="float: right;line-height: 28px;" id="editorFileValue"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/layer/laydate/laydate.js"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		var token = sessionStorage.getItem("user_token");
+		var exportClassId = parent.exportClassId; //要导入的班级id
+		var index = parent.layer.getFrameIndex(window.name);
+		//tab切换  导入下载文件
+		var tabIndex = 0;
+		$('.nav-tabs li').click(function() {
+			tabIndex = $(this).index();
+			$('.tab_content').find('.tabcontent_div').eq(tabIndex).addClass('show').siblings().removeClass('show');
+		});
+		//下载学生excel模板
+		function xiazai() {
+			window.open(http + "student/downLoadStudentExcel");
+		}
+		//导出学生excel
+		function exportExcel() {
+			if(parent.$("#pagination").is(":hidden")){
+				layer.msg('此班级下没有学生，请先添加学生再进行下载！')
+			}else{
+				window.open(http + "student/exportStudentToExcel?classId=" + exportClassId);
+			}
+			
+		}
+
+		//新增导入
+		var addList = "";
+		function addClassImport() {
+			var formData = new FormData();
+			var fileElem = $('#addFile')[0];
+			formData.append('file', fileElem.files[0]);
+			console.log(fileElem.files[0])
+			if(fileElem.files[0] == undefined) {
+				layer.msg("请选择文件！");
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "student/importStudentByExcel?classId=" + exportClassId,
+				processData: false,
+				contentType: false,
+				data: formData,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					console.log(data)
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						$('#addFileValue').text("请重新上传！");
+						$('#addFile').val("");
+					}
+					if(data.success) {
+						addList = data.obj;
+						if(!jQuery.isEmptyObject(addList)) {
+							layer.open({
+								title: '未导入人员',
+								type: 2,
+								area: ['600px', '450px'],
+								fixed: false, //不固定
+								maxmin: true,
+								content: 'errorMsg.html'
+							});
+							parent.getGrade();
+							parent.studentInfo();
+							$('#addFileValue').text("请修改后重新上传！");
+							$("#addFile").val("");
+
+						} else {
+							layer.msg(data.msg);
+							parent.getGrade();
+							parent.studentInfo();
+							parent.layer.close(index);
+
+						}
+
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		}
+		//修改导入
+		var editorList = "";
+		function editorClassImport() {
+			var formData = new FormData();
+			var fileElem = $('#editorFile')[0];
+			formData.append('file', fileElem.files[0]);
+			if(fileElem.files[0] == undefined) {
+				layer.msg("请选择文件！");
+				return false;
+			}
+			var load = parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "student/importUpdateData?classId=" + exportClassId,
+				processData: false,
+				contentType: false,
+				data: formData,
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				success: function(data) {
+					parent.layer.close(load);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						$('#editorFileValue').text("请重新上传！");
+						$('#editorFile').val("");
+					}
+					if(data.success) {
+						editorList = data.obj;
+						if(!jQuery.isEmptyObject(editorList)) {
+							
+							layer.open({
+								title: '未导入人员',
+								type: 2,
+								area: ['600px', '450px'],
+								fixed: false, //不固定
+								maxmin: true,
+								content: 'errorMsg.html'
+							});
+							$('#editorFileValue').text("请修改后重新上传！");
+							$('#editorFile').val("");
+						} else {
+							layer.msg(data.msg);
+							parent.getGrade();
+							parent.studentInfo();
+							parent.layer.close(index);
+						}
+
+					}
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+
+		}
+		//新增选择
+		function classfileChange1(target) {
+			var name = target.value;
+			var fileName = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+			if(fileName != "xls" && fileName != "xlsx") {
+			
+				layer.msg("请选择execl格式文件");
+				target.value = "";
+				$('#addFileValue').text("请重新上传！");
+				return false;
+			} else {
+				$("#addFileValue").text(name);
+			}
+
+		}
+
+		function classfileChange2(target) {
+			var name = target.value;
+			var fileName = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+			if(fileName != "xls" && fileName != "xlsx") {
+				layer.msg("请选择execl格式文件");
+				
+				target.value = "";
+				$('#editorFileValue').text("请重新上传！");
+				
+				return false;
+				
+			} else {
+				$("#editorFileValue").text(name);
+			}
+		}
+	</script>
+
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="shortcut icon" type="images/x-icon" href="http://192.168.1.175:8091/image/signImg/favicon.ico">
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="../../../css/animate.min.css" rel="stylesheet">
+		<link href="../../../css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="../../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../../css/iframe.css" rel="stylesheet">
+		<link href="../../../css/index_add.css" rel="stylesheet">
+		<link href="../../../css/student.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<form class="form-horizontal m-t " novalidate="novalidate">
+			<div class="width">
+				<span>规则名称：</span>
+				<input type="text" value="" data-type="title" class="p-l10 inputTitle" placeholder="请输入周规则名称" />
+				<span class="input_msg">最多10个字符（中文或者英文）</span>
+			</div>
+
+			<div class="width">
+				<span>日考勤规则：</span>
+				<a class="btn btn-sm btn-primary fontSize15" href="#" onclick="dayKqRule(this)">选择日考勤规则</a>
+				<span id="xuanzeAlert" class="hide"></span>
+			</div>
+
+			<div class="width">
+				<span class="left">工作日设置：</span>
+				<div class="table-responsive ">
+					<table class="table table-striped tableBorder" id="workDaySetup" style="border: 1px solid #ddd;">
+						<thead>
+							<tr>
+
+								<th><input type="checkbox" class="i-checks" name="input[]" id="allOptionId" value=""></th>
+								<th>工作日</th>
+								<th>班次时间段</th>
+
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<input type="checkbox" class="i-checks" name="input[]" value="1">
+								</td>
+								<td class="week">周一</td>
+								<td class="timeSlot"></td>
+
+								<td>
+									<a href="#" class="btn btn-sm btn-primary" onclick="updateRule(this)">更改考勤</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox" class="i-checks" name="input[]" value="2">
+								</td>
+								<td class="week">周二</td>
+								<td class="timeSlot"></td>
+
+								<td>
+									<a href="#" class="btn btn-sm btn-primary" onclick="updateRule(this)">更改考勤</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox" class="i-checks" name="input[]" value="3">
+								</td>
+								<td class="week">周三</td>
+								<td class="timeSlot"></td>
+
+								<td>
+									<a href="#" class="btn btn-sm btn-primary" onclick="updateRule(this)">更改考勤</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox" class="i-checks" name="input[]" value="4">
+								</td>
+								<td class="week">周四</td>
+								<td class="timeSlot"></td>
+
+								<td>
+									<a href="#" class="btn btn-sm btn-primary" onclick="updateRule(this)">更改考勤</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox" class="i-checks" name="input[]" value="5">
+								</td>
+								<td class="week">周五</td>
+								<td class="timeSlot"></td>
+
+								<td>
+									<a href="#" class="btn btn-sm btn-primary" onclick="updateRule(this)">更改考勤</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox" class="i-checks" name="input[]" value="6">
+								</td>
+								<td class="week">周六</td>
+								<td class="timeSlot"></td>
+
+								<td>
+									<a href="#" class="btn btn-sm btn-primary" onclick="updateRule(this)">更改考勤</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox" class="i-checks" name="input[]" value="0">
+								</td>
+								<td class="week">周日</td>
+								<td class="timeSlot"></td>
+
+								<td>
+									<a href="#" class="btn btn-sm btn-primary" onclick="updateRule(this)">更改考勤</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+			</div>
+
+		</form>
+	</body>
+	<script src="../../../js/jquery.min.js?v=2.1.4"></script>
+	<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="../../../js/content.min.js?v=1.0.0"></script>
+	<script src="../../../js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+	<script src="../../../js/plugins/layer/layer.min.js"></script>
+	<script src="../../../js/plugins/iCheck/icheck.min.js"></script>
+
+	<script src="../../../js/script/config.js"></script>
+	<script src="../../../js/script/login.js"></script>
+
+	<script>
+		var id = parent.editorId;
+		var token = sessionStorage.getItem("user_token");
+		var index = parent.layer.getFrameIndex(window.name);
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+			//全选
+			$('#allOptionId').on('ifChecked', function(event) {
+				$("#workDaySetup tbody tr td input[name='input[]']:checkbox").iCheck('check');
+				console.log($(this).val())
+				console.log(event);
+			});
+			//反选
+			$('#allOptionId').on('ifUnchecked', function(event) {
+				$("#workDaySetup tbody tr td input[name='input[]']:checkbox").iCheck('uncheck');
+
+			});
+		})
+		//选择日考勤规则
+		function dayKqRule(elem) {
+			layer.open({
+				title: '选择日考勤规则',
+				type: 2,
+				area: ['600px', '380px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'kq_rule.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					var value = iframe.xuanzeRadio();
+					console.log(value);
+					$('#xuanzeAlert').removeClass('hide');
+					$('#xuanzeAlert').html("");
+				
+					for(var i = 0; i < value.length; i++) {
+						$('#xuanzeAlert').text(value[i].sketch);
+						$('#xuanzeAlert').attr("data-id", value[i].id);
+						timeSolt1 = value[i].sketch;
+					}
+					$('#workDaySetup tbody tr').each(function() {
+						$(this).find('.timeSlot').text()
+						for(var i = 0; i < value.length; i++) {
+
+							$(this).find('.timeSlot').text(value[i].sketch);
+							$(this).find('.timeSlot').attr('data-id', value[i].id);
+							$(this).find('.timeSlot').attr('data-name', value[i].name);
+							$(this).find('.timeSlot').attr('data-sketch', value[i].sketch);
+						}
+					})
+
+				}
+			});
+		}
+		//更改考勤规则
+		var id;
+		function updateRule(elem) {
+			id = $(elem).parent().siblings('.timeSlot').attr("data-id");
+			console.log(id);
+			layer.open({
+				title: '更改日考勤规则',
+				type: 2,
+				area: ['600px', '400px'],
+				fixed: false, //不固定
+				maxmin: true,
+				content: 'updateKqRule.html',
+				btn: ['确定', '取消'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					var updata = iframe.editorRadio();
+					console.log(updata);
+					for(var i = 0; i < updata.length; i++) {
+
+						$(elem).parent().siblings('.timeSlot').attr('data-id', updata[i].id);
+						$(elem).parent().siblings('.timeSlot').attr('data-name', updata[i].name);
+						$(elem).parent().siblings('.timeSlot').text(updata[i].sketch);
+
+					}
+				}
+			})
+		}
+		
+		//新增考勤规则
+		function addSubmit() {
+			var weekContent = [];
+			var weekContentItems = {};
+			var title = $('.inputTitle').val();
+			var sketchName = $('#xuanzeAlert').text();
+			var sketchId = $('#xuanzeAlert').attr("data-id");
+
+			if(title == "") {
+				layer.msg('请填写考勤规则！');
+				return false;
+			}
+			if(sketchName == "") {
+				layer.msg('请选择日考勤规则！');
+				
+				return false;
+			}
+			var attendanceDetail = [];
+			var str = "";
+			var sketch="";
+			$("#workDaySetup tbody tr td input[name='input[]']:checkbox").each(function() {
+				var attendanceDetailItem = {};
+				if($(this).is(':checked')) {
+					str += $(this).val() + '，';
+					
+					attendanceDetailItem['identifyNo'] = $(this).val();
+					attendanceDetailItem['dayName'] = $(this).parent().parent().siblings('.timeSlot').text();
+					attendanceDetailItem['dayRulesId'] = $(this).parent().parent().siblings('.timeSlot').attr('data-id');
+					sketch+="每"+$(this).parent().parent().siblings('.week').text()+'、';		
+					attendanceDetail.push(attendanceDetailItem);
+				}
+
+			});
+			
+			if(str == "") {
+				layer.msg('请至少选择一天工作日！');
+				return false;
+			}
+			weekContentItems['name'] = title;
+			weekContentItems['sketch'] = sketch;
+			weekContentItems['dayAttendanceId'] = sketchId;
+			weekContentItems['dayAttendanceName'] = sketchName;
+			weekContentItems['attendanceDetail'] = attendanceDetail;
+			weekContent.push(weekContentItems);
+			console.log(weekContent);
+			var load=parent.layer.load();
+			$.ajax({
+				type: "post",
+				url: http + "weekattendancerules/add",
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				beforeSend: function(XMLHttpRequest) {
+					XMLHttpRequest.setRequestHeader("user_token", token);
+				},
+				data: JSON.stringify(weekContent[0]),
+				success: function(data) {
+					parent.layer.close(load);
+					console.log(data);
+					if(data.success == false) {
+						layer.msg(data.msg);
+						var obj=data.obj;
+						if(!jQuery.isEmptyObject(obj)) {
+							layer.msg(obj.message);
+						}
+						return false;
+					}
+					if(data.success) {
+						layer.msg(data.msg);
+						parent.weekRuleList();
+						parent.layer.close(index);
+					}
+
+					
+				},
+				error: function(error) {
+					parent.layer.close(load);
+					layer.msg("程序错误，请重试！");
+				}
+			});
+			
+		}
+	</script>
+
+</html>

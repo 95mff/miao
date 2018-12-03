@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>智慧校园管理平台</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" type="images/x-icon" href="favicon.ico">
+		<link href="css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+		<link href="css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+		<link href="css/animate.min.css" rel="stylesheet">
+		<link href="css/style.min862f.css?v=4.1.0" rel="stylesheet">
+		<link href="css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/index_add.css" />
+		<link href="css/myPagination.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<link rel="stylesheet" href="css/iconfont_icon.css" />
+
+	</head>
+
+	<body class="gray-bg top-navigation">
+
+		<div id="wrapper">
+			<div id="page-wrapper" class="gray-bg">
+				<div class="row border-bottom white-bg">
+					<nav class="navbar navbar-static-top" role="navigation">
+						<div class="nav_header">
+							<div class="nav_header_top">
+								<div class="nav_header_top_inner">
+									
+									<p style="float: left;" class="header_title_logo">
+										<img src="img/logo_content.png" alt="头像" title="头像" class="nav_header_tou" />
+										<span class="logo_title">智慧校园运营管理系统</span>
+
+									</p>
+
+									<ul class="nav_list">
+										<li class="nav_listActive">
+											<!--<a href="index.html"><i class="fa fa-home"></i>员工管理</a>-->
+											<a href="index.html"><i class="icon iconfont icon-yuangongguanli-copy"></i>员工管理</a>
+										</li>
+										<li>
+											<a href="pages/studentAdministration/grade.html"><i class="icon iconfont icon-xueshengguanli"></i>学生管理</a>
+											<ul class="nav_list_menu" style="margin-left:-160px;">
+												<li>
+													<a href="pages/studentAdministration/grade.html">年级管理</a>
+												</li>
+												<li>
+													<a href="pages/studentAdministration/dorms.html">宿舍管理</a>
+												</li>
+
+											</ul>
+										</li>
+										<li>
+											<a href="pages/visitorAdministration/stranger.html"><i class="icon iconfont icon-fangkeguanli"></i>来访管理</a>
+											<ul class="nav_list_menu" style="margin-left:-260px;">
+												<li>
+													<a href="pages/visitorAdministration/stranger.html">陌生人员名单</a>
+												</li>
+
+												<li>
+													<a href="pages/visitorAdministration/blacklist.html">黑名单</a>
+												</li>
+												<li>
+													<a href="pages/visitorAdministration/whitelist.html">白名单</a>
+												</li>
+												<li>
+													<a href="pages/visitorAdministration/exemptionAttendanceList.html">白名单</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="pages/kqAdministration/dayRule.html"><i class="icon iconfont icon-kaoqinguanli"></i>考勤管理</a>
+											<ul class="nav_list_menu" style="margin-left:-400px;">
+												<li>
+													<a href="pages/kqAdministration/dayRule.html">日考勤规则</a>
+												</li>
+												<li>
+													<a href="pages/kqAdministration/weekRule.html">周考勤规则</a>
+												</li>
+												<li>
+													<a href="pages/kqAdministration/kq_group.html">考勤组管理</a>
+												</li>
+												<li>
+													<a href="pages/kqAdministration/holiday.html">假期管理</a>
+												</li>
+												<li>
+													<a href="pages/kqAdministration/pushTime.html">推送时间管理</a>
+												</li>
+												<li>
+													<a href="pages/kqAdministration/jurisdiction.html">权限管理</a>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<a href="pages/kqCount/AttendanceStatistics.html"><i class="icon iconfont icon-tongji"></i>考勤统计</a>
+										</li>
+
+										<li>
+											<a href="pages/systemSetup/account.html"><i class="icon iconfont icon-xitongguanli-fuben"></i>系统设置</a>
+											<ul class="nav_list_menu" style="margin-left:-640px;">
+
+												<li>
+													<a href="pages/systemSetup/account.html">账号管理</a>
+												</li>
+												<li>
+													<a href="pages/systemSetup/schoolGate.html">监控门管理</a>
+												</li>
+												<li>
+													<a href="pages/systemSetup/equipment.html">设备管理</a>
+												</li>
+												<li>
+													<a href="pages/systemSetup/screen.html">设备管理</a>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+								<p class="user">
+									<span >欢迎您：<span class="userName">lcyz_admin</span></span>
+									<a href="login.html" class="color"><i class="icon iconfont icon-tuichu"></i>退出登录</a>
+								</p>
+							</div>
+						</div>
+
+						
+					</nav>
+				</div>
+				<div class="wrapper wrapper-content">
+					<div class="container white-bg">
+						<div class="row">
+							<div class="col-md-12 content_title">员工管理</div>
+
+						</div>
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3">
+								<div class="tree_header_left" style="margin-bottom: 10px;margin-top:10px;">
+									<p class="tree_header_left_title">当前部门</p>
+
+									<div class="tree_headerBtn">
+										<span class="tree_header_left_label" id="departName">部门名称</span>
+										<div class="tree_header_left_btn" onclick="addDeparment(this)">添加</div>
+										<div class="tree_header_left_btn" onclick="editorDepartment(this)">编辑</div>
+										<div class="tree_header_left_btn" onclick="delDepartment(this)">删除</div>
+									</div>
+									
+
+								</div>
+								<div id="personnal" class="treeview"></div>
+							</div>
+							<!--右侧-->
+							<div class="col-lg-9 col-md-9 col-sm-9">
+								<div class="row b-t1">
+									<div class="form-group col-md-4">
+										<div class="input-group">
+											<input type="text" class="form-control input-sm" name="search" placeholder="请输入姓名或工号" id="name">
+											<div class="input-group-btn">
+												<button class="btn btn-sm btn-primary" id="nameSerch">搜索</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row m-r5 border-bottom">
+									<form class="form-horizontal m-t">
+										<div class="form-group">
+											<label class="col-sm-1 control-label " style="font-size:14px;">时间：</label>
+											<div class="col-sm-10 m-t8">
+
+												<input id="start" name="beginTime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth120" placeholder="请选择开始时间" style="margin-top:-10px;">
+												<label class="control-label input_label">至</label>
+												<input id="end" name="endTime" minlength="2" type="text" class="laydate-icon form-control layer-date m-t-8 inputWidth180" placeholder="请选择结束时间" style="margin-top:-10px;">
+
+												<label class="control-label input_label m-l10">是否建模</label>
+												<select class="form-control m-t5 selectWidth120" style="width: 100px;display: inline-block;" id="modelFlag">
+													<option value="">全部</option>
+													<option value="1">已建模</option>
+													<option value="0">未建模</option>
+												</select>
+												<a class="btn btn-sm btn-primary" id="searchBtn" style="margin-top:-5px;">查询</a>
+
+											</div>
+										</div>
+									</form>
+								</div>
+								<!--list-->
+								<div class="row">
+									<div class="col-md-12 list-title">
+										<i class="glyphicon glyphicon-stop fontsize"></i> 部门人员
+									</div>
+									<div class="col-md-12 m-t10" style="position: relative;">
+										<div class="right_btn left">
+											<div class="tree_header_left_btn" onclick="exportFun()">批量导入/导出/修改</div>
+											<div class="tree_header_left_btn" onclick="addPersonal()">添加成员</div>
+											<div class="tree_header_left_btn" onclick="modelData()">同步建模数据</div>
+
+											<div class="tree_header_left_btn" onclick="batchDel()">批量删除</div>
+
+										</div>
+
+										<div class="col-sm-12 m-t10">
+											<div class="ibox float-e-margins ">
+
+												<div class="ibox-content pnone">
+
+													<div class="table-responsive relative">
+														<table class="table table-striped" id="tableInfo">
+															<thead>
+																<tr>
+
+																	<th><input type="checkbox" class="i-checks" name="input[]" id="allOptionId" value="123"></th>
+																	<th>姓名</th>
+																	<th>部门</th>
+																	<th>职位</th>
+																	<th>工号</th>
+																	<th>手机号</th>
+																	<th>入职时间</th>
+																	<th>建模信息</th>
+																	<th style="text-align: center;">操作</th>
+																</tr>
+															</thead>
+															<tbody>
+
+															</tbody>
+														</table>
+
+													</div>
+													<!--分页-->
+													<div id="pagination" class="pagination"></div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<script src="js/jquery.min.js?v=2.1.4"></script>
+		<script src="js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="js/content.min.js?v=1.0.0"></script>
+		<script src="js/plugins/treeview/bootstrap-treeview.js"></script>
+		<script src="js/plugins/validate/jquery.validate.min.js" charset="UTF-8"></script>
+		<script src="js/plugins/validate/messages_zh.min.js" charset="UTF-8"></script>
+		<script src="js/plugins/layer/laydate/laydate.js"></script>
+		<script src="js/plugins/layer/layer.min.js"></script>
+
+		<script src="js/plugins/iCheck/icheck.min.js"></script>
+		<script src="js/isIDCard.js"></script>
+		<script src="js/myPagination.js"></script>
+
+		<script src="js/common.js"></script>
+		<script src="js/script/config.js"></script>
+		<script src="js/script/login.js"></script>
+		<script src="js/script/index.js"></script>
+
+	</body>
+	<script>
+		//日期插件
+		laydate({
+			elem: "#start",
+			event: "focus",
+			max: laydate.now()
+
+		});
+		laydate({
+			elem: "#end",
+			event: "focus",
+			max: laydate.now()
+
+		});
+		//checkbox全选，反选
+		$(document).ready(function() {
+			$(".i-checks").iCheck({
+				checkboxClass: "icheckbox_square-green",
+				radioClass: "iradio_square-green",
+			})
+
+		});
+		//添加部门
+		function addDeparment(elem) {
+			layer.open({
+				title: '添加部门',
+				type: 2,
+				area: ['600px', '400px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: ['pages/iframe/index/addDepartment.html', 'no'],
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					iframe.add();
+				}
+			});
+		}
+		//编辑部门
+		function editorDepartment(elem) {
+			//进行判断 用户是否选择id
+			if(id == null || id == "" || id == undefined) {
+				layer.alert('请选择部门', {
+					icon: 2
+				});
+				return false;
+			}
+			layer.open({
+				title: '编辑部门',
+				type: 2,
+				area: ['600px', '400px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: ['pages/iframe/index/editorDepartment.html', 'no'],
+				yes: function(index, layero) {
+					var iframeWin = window[layero.find('iframe')[0]['name']];
+					//执行iframe页的方法
+					iframeWin.editor();
+					$('#departName').text("部门名称");
+
+				}
+			});
+		}
+		//删除部门
+		function delDepartment(elem) {
+			console.log(id);
+			//进行判断 用户是否选择id
+			if(id == null || id == "" || id == undefined) {
+				layer.alert('请选择部门', {
+					icon: 2
+				});
+				return false;
+			}
+			layer.alert('', {
+				icon: 2,
+				time: 0,
+				content: '您确定要删除这条记录吗？',
+				title: '删除确认',
+				btn: ['确定', '取消'],
+				yes: function(index) {
+					layer.close(index);
+					var load = layer.load();
+					$.ajax({
+						type: "post",
+						url: http + "/department/delete?id=" + id,
+						contentType: "application/json;charset=utf-8",
+						dataType: "json",
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("user_token", token);
+						},
+						success: function(data) {
+							layer.close(load);
+							if(data.success == false) {
+								layer.msg(data.msg);
+							}
+							if(data.success) {
+								layer.msg('删除部门成功', {
+									time: 2000
+								}, function() {
+									$('#departName').text("部门名称");
+									zuzhi();
+									departmentId = "";
+									searchStaff();
+								});
+							}
+
+						},
+						error: function(error) {
+							layer.close(load);
+							layer.msg("程序错误,请重试！");
+						}
+					});
+				}
+			});
+		}
+		//批量导出导入
+		function exportFun() {
+			if(id == null || id == "") {
+				layer.alert('请选择部门', {
+					icon: 2
+				});
+				return false;
+			}
+			layer.open({
+				title: '批量导入/导出',
+				type: 2,
+				area: ['700px', '600px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: 'pages/iframe/index/export.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+
+					var tabIndex = iframe.tabIndex;
+					console.log(tabIndex)
+					if(tabIndex == 0) {
+						iframe.addImport()
+					}
+					if(tabIndex == 1) {
+						iframe.editorImport()
+					}
+				}
+			});
+		}
+		//添加成员
+		function addPersonal() {
+			$('#name').val("");
+			$('#start').val("");
+			$('#end').val("");
+			layer.open({
+				title: '添加员工',
+				type: 2,
+				area: ['800px', '600px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: 'pages/iframe/index/addPersonal.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					var value = iframe.addEmployee();
+				}
+			});
+		}
+		//批量删除部门员工
+		function batchDel() {
+			$('#name').val("");
+			$('#start').val("");
+			$('#end').val("");
+			var delIds = [];
+			$("#tableInfo tbody tr td input[name='personnal[]']:checkbox").each(function() {
+				if($(this).is(':checked')) {
+					delIds.push($(this).val());
+				}
+			});
+			if(jQuery.isEmptyObject(delIds)) {
+				layer.alert('请选择要删除的人员', {
+					icon: 2
+				});
+				return false;
+			}
+			layer.alert('删除提示', {
+				icon: 2,
+				time: 0,
+				content: '您确定要删除这条记录吗？',
+				title: '删除确认',
+				btn: ['确定', '取消'],
+				yes: function(index) {
+					layer.close(index);
+					var load = layer.load();
+					$.ajax({
+						type: "post",
+						url: http + "employee/delete",
+						contentType: "application/json;charset=utf-8",
+						dataType: "json",
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("user_token", token);
+						},
+						data: JSON.stringify({
+							"ids": delIds
+						}),
+						success: function(data) {
+							layer.close(load);
+							if(data.success == false) {
+								layer.msg(data.msg);
+							}
+							if(data.success) {
+								if($('#allOptionId').is(':checked')) {
+									$('#allOptionId').iCheck('toggle');
+								}
+								layer.msg('删除员工成功', {
+									time: 2000
+								}, function() {
+									searchStaff();
+								});
+							}
+
+						},
+						error: function(error) {
+							layer.close(load);
+							layer.msg("程序错误,请重试！");
+						}
+					});
+				}
+			});
+		}
+		//编辑成员
+		var editorPid = "";
+
+		function editorPersonnal(elem) {
+			editorPid = $(elem).parent().parent().attr('data-id');
+			layer.open({
+				title: '编辑员工',
+				type: 2,
+				area: ['800px', '600px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: 'pages/iframe/index/editorPersonal.html',
+				yes: function(guanbi, index) {
+					var iframe = window[index.find('iframe')[0]['name']];
+					//获取子界面编辑人员方法
+					iframe.editorEmployee();
+
+				}
+			});
+		}
+
+		//更新
+		function updateTabale() {
+			var id = 1;
+			//进行判断 用户是否选择id
+			if(id == 2) {
+				layer.alert('请选择节点', {
+					icon: 2
+				});
+				return false;
+			}
+			layer.open({
+				title: '更新',
+				type: 2,
+				area: ['800px', '650px'],
+				fixed: false, //不固定
+				maxmin: true,
+				btn: ['确定', '取消'],
+				content: 'pages/iframe/index/update.html',
+				yes: function(guanbi, index) {
+					var newpsw = window[index.find('iframe')[0]['name']];
+					//获取子界面传过来的参数
+					var value = newpsw.editor();
+					newpsw.editor();
+					console.log(value);
+					if(value) {
+						layer.close(guanbi);
+					}
+				}
+			});
+		}
+
+		//同步建模数据
+		function modelData() {
+
+			layer.alert('是否同步数据', {
+				icon: 1,
+				time: 0,
+				content: '您是否要同步数据？',
+				title: '同步确定',
+				btn: ['确定', '取消'],
+				yes: function(index, layero) {
+					layer.close(index);
+					var load = layer.load();
+					$.ajax({
+						type: "get",
+						url: http + "tupu/getUserList",
+						contentType: "application/json;charset=utf-8",
+						dataType: "json",
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("user_token", token);
+						},
+						success: function(data) {
+							layer.close(load);
+							if(data.success == false) {
+								layer.msg(data.msg);
+							}
+							if(data.success) {
+								layer.msg("数据同步成功!");
+							}
+						},
+						error: function(error) {
+							layer.close(load);
+							layer.msg("程序错误，请重试！");
+
+						}
+					});
+				}
+			});
+		}
+	</script>
+
+</html>
